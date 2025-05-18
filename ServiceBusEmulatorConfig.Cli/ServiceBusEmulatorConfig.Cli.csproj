@@ -5,15 +5,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <!-- .NET Tool specific properties -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>sbconfig</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    
+
+
     <!-- NuGet package metadata -->
     <PackageId>ServiceBusEmulatorConfig.Tool</PackageId>
-    <Version>1.0.0</Version>
     <Authors>Your Name</Authors>
     <Description>Azure Service Bus Emulator Configuration Tool</Description>
     <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj" />
+    <ProjectReference
+      Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj" />
   </ItemGroup>
 
 </Project>
