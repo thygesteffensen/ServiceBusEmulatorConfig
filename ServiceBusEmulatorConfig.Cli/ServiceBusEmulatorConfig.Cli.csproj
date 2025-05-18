@@ -8,13 +8,13 @@
 
     <!-- .NET Tool specific properties -->
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>sbconfig</ToolCommandName>
+    <ToolCommandName>tst.sbconfig</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
 
 
     <!-- NuGet package metadata -->
-    <PackageId>ServiceBusEmulatorConfig.Tool</PackageId>
-    <Authors>Your Name</Authors>
+    <PackageId>ServiceBusEmulatorConfig.Cli</PackageId>
+    <Authors>Thyge Skødt Steffensen</Authors>
     <Description>Azure Service Bus Emulator Configuration Tool</Description>
     <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
   </PropertyGroup>
