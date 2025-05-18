@@ -1,0 +1,1121 @@
+{
+  "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "sbemulatorns",
+        "Queues": [],
+        "Topics": [
+          {
+            "Name": "foendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "Broker",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "Broker",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "from-FOEndpoint",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Broker\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid()"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "Continuation",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "continuation",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Continuation\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Continuation\u0027"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "ECEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "ECEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ClosedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ClosedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027ECEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027ECEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027ECEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PayrollDisbursement",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PayrollDisbursement\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027ECEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ReopenedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ReopenedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027ECEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "Resolver",
+                  "ForwardTo": "",
+                  "RequiresSession": true
+                },
+                "Rules": [
+                  {
+                    "Name": "to-FOEndpoint",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027FOEndpoint\u0027"
+                      },
+                      "Action": {}
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "Heartbeat",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "Heartbeat",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "heartbeat",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Heartbeat\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "MascotStoreEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "MascotStoreEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ClosedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ClosedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MascotStoreEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MascotStoreEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MascotStoreEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ReopenedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ReopenedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MascotStoreEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "MitIndkoebEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "MitIndkoebEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ClosedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ClosedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewOpenProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewOpenProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewPurchaseOrderId",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewPurchaseOrderId\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewPurchaseOrderNumber",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewPurchaseOrderNumber\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PurchaseOrderApproveStatus",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PurchaseOrderApproveStatus\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ReopenedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ReopenedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027MitIndkoebEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "Resolver",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "Resolver",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "from-FOEndpoint",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Resolver\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "to-FOEndpoint",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027FOEndpoint\u0027"
+                      },
+                      "Action": {}
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "Retry",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "retry",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Retry\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Retry\u0027"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "Name": "TracetoolEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "TracetoolEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ClosedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ClosedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ClosedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ClosedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewOpenProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewOpenProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "Project",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027Project\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ReopenedFoCostCentre",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ReopenedFoCostCentre\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ReopenedProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ReopenedProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FOEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027TracetoolEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "broker",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ECEmployeeHired",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeHired\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ECEmployeeModified",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeModified\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ECEmployeeStopped",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeStopped\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeHired",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeHired\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeModified",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeModified\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeRequest",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeRequest\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeStopped",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeStopped\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "MaterialRent",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027MaterialRent\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedPurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedPurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewPurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewPurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewPurchaseOrderId",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewPurchaseOrderId\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NumberOfToolsUpdatedOnProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NumberOfToolsUpdatedOnProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PurchaseOrderStatus",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PurchaseOrderStatus\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "RequestPurchaseOrderId",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027RequestPurchaseOrderId\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.To = \u0027FOEndpoint\u0027; SET user.From = \u0027Broker\u0027"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "ecendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "ECEmployeeHired",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeHired\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027ECEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ECEmployeeModified",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeModified\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027ECEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ECEmployeeStopped",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ECEmployeeStopped\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027ECEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "fieldserviceendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "HREmployeeRequest",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeRequest\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FieldServiceEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "fsadendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "HREmployeeRequest",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeRequest\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027FSADEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "manager",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "to-FOEndpoint",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027FOEndpoint\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027Manager\u0027"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "mithrendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "HREmployeeHired",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeHired\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitHrEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeModified",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeModified\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitHrEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "HREmployeeStopped",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeStopped\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitHrEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "mitindkoebendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "HREmployeeRequest",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027HREmployeeRequest\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "ModifiedPurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027ModifiedPurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NewPurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NewPurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PurchaseOrder",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PurchaseOrder\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "PurchaseOrderStatus",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027PurchaseOrderStatus\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "RequestPurchaseOrderId",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027RequestPurchaseOrderId\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027MitIndkoebEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "Name": "tracetoolendpoint",
+            "Properties": {
+              "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+              "DuplicateDetectionHistoryTimeWindow": "PT10M",
+              "RequiresDuplicateDetection": false
+            },
+            "Subscriptions": [
+              {
+                "Name": "FOEndpoint",
+                "Properties": {
+                  "DeadLetteringOnMessageExpiration": false,
+                  "DefaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                  "LockDuration": "PT1M",
+                  "MaxDeliveryCount": 10,
+                  "ForwardDeadLetteredMessagesTo": "",
+                  "ForwardTo": "FOEndpoint",
+                  "RequiresSession": false
+                },
+                "Rules": [
+                  {
+                    "Name": "MaterialRent",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027MaterialRent\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027TracetoolEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "NumberOfToolsUpdatedOnProject",
+                    "Properties": {
+                      "FilterType": "Sql",
+                      "SqlFilter": {
+                        "SqlExpression": "user.To = \u0027NumberOfToolsUpdatedOnProject\u0027"
+                      },
+                      "Action": {
+                        "SqlExpression": "SET user.From = \u0027TracetoolEndpoint\u0027; SET user.EventId = newid(); SET user.To = \u0027FOEndpoint\u0027;"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Logging": {
+      "Type": "File"
+    }
+  }
+}
