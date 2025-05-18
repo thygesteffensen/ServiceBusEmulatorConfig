@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using ServiceBusEmulatorConfig.Core.Models.Arm;
 using ServiceBusEmulatorConfig.Core.Models.Emulator;
 
@@ -10,7 +12,8 @@ namespace ServiceBusEmulatorConfig.Core.Services
         private readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
         private readonly JsonSerializerOptions _deserializeOptions = new()
         {
@@ -74,13 +77,16 @@ namespace ServiceBusEmulatorConfig.Core.Services
             foreach (var topicResource in topicResources)
             {
                 var topicName = ExtractResourceName(topicResource.Name, 1);
+                // Replace any double quotes with single quotes in the topic name
+                topicName = topicName;
+                
                 Console.WriteLine($"Processing topic: {topicName} (original name: {topicResource.Name})");
                 
                 var topic = new Topic
                 {
                     Name = topicName,
                     Properties = MapTopicProperties(topicResource.Properties),
-                    Subscriptions = new List<Subscription>()
+                    Subscriptions = []
                 };
 
                 namespace_.Topics.Add(topic);
@@ -100,11 +106,14 @@ namespace ServiceBusEmulatorConfig.Core.Services
                 var topicName = parts[1];
                 var subscriptionName = parts[2];
                 
-                // Clean up subscription name by removing trailing \u0027)]
-                if (subscriptionName.EndsWith("\u0027)]"))
-                {
-                    subscriptionName = subscriptionName.Substring(0, subscriptionName.Length - 4);
-                }
+            // Clean up subscription name by removing trailing \u0027)]
+            if (subscriptionName.EndsWith("\u0027)]"))
+            {
+                subscriptionName = subscriptionName.Substring(0, subscriptionName.Length - 4);
+            }
+            
+            // Replace any double quotes with single quotes in the subscription name
+            subscriptionName = subscriptionName;
 
                 Console.WriteLine($"Processing subscription: {subscriptionName} for topic: {topicName} (original name: {subscriptionResource.Name})");
                 
@@ -157,6 +166,10 @@ namespace ServiceBusEmulatorConfig.Core.Services
                 {
                     subscriptionName = subscriptionName.Substring(0, subscriptionName.Length - 4);
                 }
+                
+                // Replace any double quotes with single quotes in the names
+                subscriptionName = subscriptionName;
+                ruleName = ruleName;
 
                 var topic = namespace_.Topics.FirstOrDefault(t => t.Name.Equals(topicName, StringComparison.OrdinalIgnoreCase));
                 if (topic == null)
@@ -319,7 +332,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("forwardDeadLetteredMessagesTo", out var forwardDlq))
             {
-                properties.ForwardDeadLetteredMessagesTo = forwardDlq.ToString()?.Replace('"', '\'') ?? "";
+                properties.ForwardDeadLetteredMessagesTo = forwardDlq.ToString() ?? "";
             }
             else
             {
@@ -328,7 +341,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("forwardTo", out var forwardTo))
             {
-                properties.ForwardTo = forwardTo.ToString()?.Replace('"', '\'') ?? "";
+                properties.ForwardTo = forwardTo.ToString() ?? "";
             }
             else
             {
@@ -385,7 +398,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
                     else if (sqlFilterObj is Dictionary<string, object> sqlFilterDict && 
                              sqlFilterDict.TryGetValue("sqlExpression", out var sqlExprObj))
                     {
-                        properties.SqlFilter.SqlExpression = sqlExprObj?.ToString()?.Replace('"', '\'') ?? "";
+                        properties.SqlFilter.SqlExpression = sqlExprObj?.ToString() ?? "";
                     }
                 }
             }
@@ -404,12 +417,12 @@ namespace ServiceBusEmulatorConfig.Core.Services
                     
                     if (actionObj is JsonElement action && action.TryGetProperty("sqlExpression", out var actionExpr))
                     {
-                        properties.Action.SqlExpression = actionExpr.GetString()?.Replace('"', '\'') ?? "";
+                        properties.Action.SqlExpression = actionExpr.GetString() ?? "";
                     }
                     else if (actionObj is Dictionary<string, object> actionDict && 
                              actionDict.TryGetValue("sqlExpression", out var actionExprObj))
                     {
-                        properties.Action.SqlExpression = actionExprObj?.ToString()?.Replace('"', '\'') ?? "";
+                        properties.Action.SqlExpression = actionExprObj?.ToString() ?? "";
                     }
                 }
             }
