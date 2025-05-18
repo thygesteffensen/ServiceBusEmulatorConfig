@@ -232,7 +232,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
             }
             else
             {
-                properties.DefaultMessageTimeToLive = "PT1H"; // Default 1 hour
+                properties.DefaultMessageTimeToLive = "PT5M"; // Default 1 hour
             }
 
             if (armProperties.TryGetValue("duplicateDetectionHistoryTimeWindow", out var ddWindow))
@@ -282,11 +282,11 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("defaultMessageTimeToLive", out var defaultTtl))
             {
-                properties.DefaultMessageTimeToLive = "PT1M";//defaultTtl?.ToString() ?? "PT1H";
+                properties.DefaultMessageTimeToLive = "PT5M";//defaultTtl?.ToString() ?? "PT1H";
             }
             else
             {
-                properties.DefaultMessageTimeToLive = "PT1H"; // Default 1 hour
+                properties.DefaultMessageTimeToLive = "PT5M"; // Default 1 hour
             }
 
             if (armProperties.TryGetValue("lockDuration", out var lockDuration))
