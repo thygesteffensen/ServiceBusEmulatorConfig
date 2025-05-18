@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using ServiceBusEmulatorConfig.Core.Models.Arm;
 using ServiceBusEmulatorConfig.Core.Models.Emulator;
 
@@ -12,24 +7,17 @@ namespace ServiceBusEmulatorConfig.Core.Services
 {
     public class TransformationService : ITransformationService
     {
-        private readonly JsonSerializerOptions _jsonOptions;
-        private readonly JsonSerializerOptions _deserializeOptions;
-
-        public TransformationService()
+        private readonly JsonSerializerOptions _jsonOptions = new()
         {
-            _jsonOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-
-            _deserializeOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                AllowTrailingCommas = true,
-                ReadCommentHandling = JsonCommentHandling.Skip
-            };
-        }
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+        private readonly JsonSerializerOptions _deserializeOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
 
         public EmulatorConfig TransformArmToEmulatorConfig(string armJson, string namespaceName)
         {
@@ -54,13 +42,13 @@ namespace ServiceBusEmulatorConfig.Core.Services
             {
                 UserConfig = new UserConfig
                 {
-                    Namespaces = new List<Namespace>
-                    {
+                    Namespaces =
+                    [
                         new Namespace
                         {
                             Name = namespaceName
                         }
-                    },
+                    ],
                     Logging = new Logging { Type = "File" }
                 }
             };
@@ -130,11 +118,11 @@ namespace ServiceBusEmulatorConfig.Core.Services
                         Name = topicName,
                         Properties = new TopicProperties
                         {
-                            DefaultMessageTimeToLive = "P10675199DT2H48M5.4775807S",
-                            DuplicateDetectionHistoryTimeWindow = "PT10M",
+                            DefaultMessageTimeToLive = "PT5M",
+                            DuplicateDetectionHistoryTimeWindow = "PT5M",
                             RequiresDuplicateDetection = false
                         },
-                        Subscriptions = new List<Subscription>()
+                        Subscriptions = []
                     };
                     namespace_.Topics.Add(topic);
                 }
@@ -143,7 +131,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
                 {
                     Name = subscriptionName,
                     Properties = MapSubscriptionProperties(subscriptionResource.Properties),
-                    Rules = new List<Rule>()
+                    Rules = []
                 };
 
                 topic.Subscriptions.Add(subscription);
@@ -223,7 +211,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
         private string ExtractResourceName(string fullResourceName, int index)
         {
             // First process the name if it contains ARM expressions like concat
-            string processedName = ArmHelpers.ExtractNameFromArmExpression(fullResourceName);
+            var processedName = ArmHelpers.ExtractNameFromArmExpression(fullResourceName);
             
             var parts = processedName.Split('/');
             return index < parts.Length ? parts[index] : string.Empty;
@@ -240,7 +228,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("defaultMessageTimeToLive", out var defaultTtl))
             {
-                properties.DefaultMessageTimeToLive = defaultTtl?.ToString() ?? "PT1H";
+                properties.DefaultMessageTimeToLive = "PT5M";
             }
             else
             {
@@ -249,11 +237,11 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("duplicateDetectionHistoryTimeWindow", out var ddWindow))
             {
-                properties.DuplicateDetectionHistoryTimeWindow = ddWindow?.ToString() ?? "PT10M";
+                properties.DuplicateDetectionHistoryTimeWindow = /*ddWindow?.ToString() ??*/ "PT5M";
             }
             else
             {
-                properties.DuplicateDetectionHistoryTimeWindow = "PT10M"; // Default 10 minutes
+                properties.DuplicateDetectionHistoryTimeWindow = "PT5M"; // Default 10 minutes
             }
 
             if (armProperties.TryGetValue("requiresDuplicateDetection", out var reqDupDetection) && reqDupDetection != null)
@@ -294,7 +282,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("defaultMessageTimeToLive", out var defaultTtl))
             {
-                properties.DefaultMessageTimeToLive = defaultTtl?.ToString() ?? "PT1H";
+                properties.DefaultMessageTimeToLive = "PT1M";//defaultTtl?.ToString() ?? "PT1H";
             }
             else
             {
@@ -331,7 +319,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("forwardDeadLetteredMessagesTo", out var forwardDlq))
             {
-                properties.ForwardDeadLetteredMessagesTo = forwardDlq?.ToString() ?? "";
+                properties.ForwardDeadLetteredMessagesTo = forwardDlq.ToString()?.Replace('"', '\'') ?? "";
             }
             else
             {
@@ -340,7 +328,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
 
             if (armProperties.TryGetValue("forwardTo", out var forwardTo))
             {
-                properties.ForwardTo = forwardTo?.ToString() ?? "";
+                properties.ForwardTo = forwardTo.ToString()?.Replace('"', '\'') ?? "";
             }
             else
             {
@@ -397,7 +385,7 @@ namespace ServiceBusEmulatorConfig.Core.Services
                     else if (sqlFilterObj is Dictionary<string, object> sqlFilterDict && 
                              sqlFilterDict.TryGetValue("sqlExpression", out var sqlExprObj))
                     {
-                        properties.SqlFilter.SqlExpression = sqlExprObj?.ToString() ?? "";
+                        properties.SqlFilter.SqlExpression = sqlExprObj?.ToString()?.Replace('"', '\'') ?? "";
                     }
                 }
             }
@@ -416,12 +404,12 @@ namespace ServiceBusEmulatorConfig.Core.Services
                     
                     if (actionObj is JsonElement action && action.TryGetProperty("sqlExpression", out var actionExpr))
                     {
-                        properties.Action.SqlExpression = actionExpr.GetString() ?? "";
+                        properties.Action.SqlExpression = actionExpr.GetString()?.Replace('"', '\'') ?? "";
                     }
                     else if (actionObj is Dictionary<string, object> actionDict && 
                              actionDict.TryGetValue("sqlExpression", out var actionExprObj))
                     {
-                        properties.Action.SqlExpression = actionExprObj?.ToString() ?? "";
+                        properties.Action.SqlExpression = actionExprObj?.ToString()?.Replace('"', '\'') ?? "";
                     }
                 }
             }
