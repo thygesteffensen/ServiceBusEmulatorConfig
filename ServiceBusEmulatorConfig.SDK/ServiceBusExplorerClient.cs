@@ -1,6 +1,5 @@
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
-using System.Collections.ObjectModel;
 using ServiceBusEmulatorConfig.Core.Models.Emulator;
 using ServiceBusEmulatorConfig.SDK.Models;
 
@@ -25,12 +24,12 @@ namespace ServiceBusEmulatorConfig.SDK
             var topics = await GetTopicsAsync();
 
             return new ServiceBusNamespace
-            {
-                ConnectionString = _connectionString,
-                Name = ExtractNamespaceFromConnectionString(_connectionString),
-                Queues = queues,
-                Topics = topics
-            };
+            (
+                ConnectionString: _connectionString,
+                Name: ExtractNamespaceFromConnectionString(_connectionString),
+                Queues: queues,
+                Topics: topics
+            );
         }
 
         public async Task<List<ServiceBusQueue>> GetQueuesAsync()
@@ -41,9 +40,9 @@ namespace ServiceBusEmulatorConfig.SDK
             await foreach (var queueProperties in queuesPager)
             {
                 var queue = new ServiceBusQueue
-                {
-                    Name = queueProperties.Name,
-                    Properties = new Core.Models.Emulator.QueueProperties
+                (
+                    Name: queueProperties.Name,
+                    Properties: new Core.Models.Emulator.QueueProperties
                     {
                         DeadLetteringOnMessageExpiration = queueProperties.DeadLetteringOnMessageExpiration,
                         DefaultMessageTimeToLive = queueProperties.DefaultMessageTimeToLive.ToString(),
@@ -54,8 +53,9 @@ namespace ServiceBusEmulatorConfig.SDK
                         MaxDeliveryCount = queueProperties.MaxDeliveryCount,
                         RequiresDuplicateDetection = queueProperties.RequiresDuplicateDetection,
                         RequiresSession = queueProperties.RequiresSession
-                    }
-                };
+                    },
+                    MessageCount: 0 // TODO: Get the actual message count
+                );
 
                 queues.Add(queue);
             }
@@ -73,16 +73,16 @@ namespace ServiceBusEmulatorConfig.SDK
                 var subscriptions = await GetSubscriptionsAsync(topicProperties.Name);
 
                 var topic = new ServiceBusTopic
-                {
-                    Name = topicProperties.Name,
-                    Properties = new Core.Models.Emulator.TopicProperties
+                (
+                    Name: topicProperties.Name,
+                    Properties: new Core.Models.Emulator.TopicProperties
                     {
                         DefaultMessageTimeToLive = topicProperties.DefaultMessageTimeToLive.ToString(),
                         DuplicateDetectionHistoryTimeWindow = topicProperties.DuplicateDetectionHistoryTimeWindow.ToString(),
                         RequiresDuplicateDetection = topicProperties.RequiresDuplicateDetection
                     },
-                    Subscriptions = subscriptions
-                };
+                    Subscriptions: subscriptions
+                );
 
                 topics.Add(topic);
             }
@@ -100,9 +100,9 @@ namespace ServiceBusEmulatorConfig.SDK
                 var rules = await GetRulesAsync(topicName, subscriptionProperties.SubscriptionName);
 
                 var subscription = new ServiceBusSubscription
-                {
-                    Name = subscriptionProperties.SubscriptionName,
-                    Properties = new Core.Models.Emulator.SubscriptionProperties
+                (
+                    Name: subscriptionProperties.SubscriptionName,
+                    Properties: new Core.Models.Emulator.SubscriptionProperties
                     {
                         DeadLetteringOnMessageExpiration = subscriptionProperties.DeadLetteringOnMessageExpiration,
                         DefaultMessageTimeToLive = subscriptionProperties.DefaultMessageTimeToLive.ToString(),
@@ -112,8 +112,9 @@ namespace ServiceBusEmulatorConfig.SDK
                         ForwardTo = subscriptionProperties.ForwardTo ?? "",
                         RequiresSession = subscriptionProperties.RequiresSession
                     },
-                    Rules = rules
-                };
+                    Rules: rules,
+                    MessageCount: 0 // TODO: Get the actual message count
+                );
 
                 subscriptions.Add(subscription);
             }
@@ -128,17 +129,14 @@ namespace ServiceBusEmulatorConfig.SDK
 
             await foreach (var ruleProperties in rulesPager)
             {
-                var rule = new ServiceBusRule
-                {
-                    Name = ruleProperties.Name
-                };
+                Core.Models.Emulator.RuleProperties? ruleProps = null;
 
                 if (ruleProperties.Filter is SqlRuleFilter sqlFilter)
                 {
-                    rule.Properties = new Core.Models.Emulator.RuleProperties
+                    ruleProps = new Core.Models.Emulator.RuleProperties
                     {
                         FilterType = "Sql",
-                        SqlFilter = new Core.Models.Emulator.SqlFilter
+                        SqlFilter = new SqlFilter
                         {
                             SqlExpression = sqlFilter.SqlExpression
                         }
@@ -152,10 +150,10 @@ namespace ServiceBusEmulatorConfig.SDK
                         properties.Add(prop.Key, prop.Value?.ToString() ?? "");
                     }
 
-                    rule.Properties = new Core.Models.Emulator.RuleProperties
+                    ruleProps = new Core.Models.Emulator.RuleProperties
                     {
                         FilterType = "Correlation",
-                        CorrelationFilter = new Core.Models.Emulator.CorrelationFilter
+                        CorrelationFilter = new CorrelationFilter
                         {
                             ContentType = correlationFilter.ContentType ?? "",
                             CorrelationId = correlationFilter.CorrelationId ?? "",
@@ -172,18 +170,19 @@ namespace ServiceBusEmulatorConfig.SDK
 
                 if (ruleProperties.Action is SqlRuleAction sqlAction)
                 {
-                    if (rule.Properties == null)
-                    {
-                        rule.Properties = new Core.Models.Emulator.RuleProperties();
-                    }
+                    ruleProps ??= new Core.Models.Emulator.RuleProperties();
 
-                    rule.Properties.Action = new Core.Models.Emulator.SqlAction
+                    ruleProps.Action = new SqlAction
                     {
                         SqlExpression = sqlAction.SqlExpression
                     };
                 }
 
-                rules.Add(rule);
+                rules.Add(new ServiceBusRule
+                (
+                    Name: ruleProperties.Name,
+                    Properties: ruleProps!
+                ));
             }
 
             return rules;
@@ -192,37 +191,37 @@ namespace ServiceBusEmulatorConfig.SDK
         public async Task<EmulatorConfig> ExportToEmulatorConfigAsync()
         {
             var namespace_ = await GetNamespaceDetailsAsync();
-            
+
             // Create the emulator config structure
             var emulatorConfig = new EmulatorConfig
             {
                 UserConfig = new UserConfig
                 {
-                    Namespaces = 
+                    Namespaces =
                     [
                         new Namespace
                         {
                             Name = namespace_.Name,
-                            Queues = namespace_.Queues.Select(q => new Queue
+                            Queues = [.. namespace_.Queues.Select(q => new Queue
                             {
                                 Name = q.Name,
                                 Properties = q.Properties
-                            }).ToList(),
-                            Topics = namespace_.Topics.Select(t => new Topic
+                            })],
+                            Topics = [.. namespace_.Topics.Select(t => new Topic
                             {
                                 Name = t.Name,
                                 Properties = t.Properties,
-                                Subscriptions = t.Subscriptions.Select(s => new Subscription
+                                Subscriptions = [.. t.Subscriptions.Select(s => new Subscription
                                 {
                                     Name = s.Name,
                                     Properties = s.Properties,
-                                    Rules = s.Rules.Select(r => new Rule
+                                    Rules = [.. s.Rules.Select(r => new Rule
                                     {
                                         Name = r.Name,
                                         Properties = r.Properties
-                                    }).ToList()
-                                }).ToList()
-                            }).ToList()
+                                    })]
+                                })]
+                            })]
                         }
                     ],
                     Logging = new Logging { Type = "File" }
@@ -239,7 +238,7 @@ namespace ServiceBusEmulatorConfig.SDK
             {
                 if (part.StartsWith("Endpoint=", StringComparison.OrdinalIgnoreCase))
                 {
-                    var endpoint = part.Substring("Endpoint=".Length);
+                    var endpoint = part["Endpoint=".Length..];
                     var uri = new Uri(endpoint);
                     return uri.Host.Split('.')[0];
                 }
