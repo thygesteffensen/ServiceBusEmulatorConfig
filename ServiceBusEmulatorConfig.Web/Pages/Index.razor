@@ -88,7 +88,7 @@
             _queues = await ConnectionService.GetQueuesAsync();
             _topics = await ConnectionService.GetTopicsAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Handle error
         }

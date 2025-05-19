@@ -33,138 +33,59 @@
     }
     else
     {
-        <MudPaper Class="pa-4 mb-4">
-            <MudTable Items="@_topics" Dense="true" Hover="true" Bordered="true" Striped="true" 
-                       T="ServiceBusTopic" @bind-SelectedItem="_selectedTopic" Filter="FilterFunc">
-                <ToolBarContent>
-                    <MudText Typo="Typo.h6">Topics</MudText>
-                    <MudSpacer />
-                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" 
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                </ToolBarContent>
-                <HeaderContent>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Requires Duplicate Detection</MudTh>
-                    <MudTh>Duplicate Detection Window</MudTh>
-                    <MudTh>Subscription Count</MudTh>
-                    <MudTh>Actions</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Requires Duplicate Detection">
-                        @(context.Properties.RequiresDuplicateDetection ? "Yes" : "No")
-                    </MudTd>
-                    <MudTd DataLabel="Duplicate Detection Window">
-                        @(context.Properties.DuplicateDetectionHistoryTimeWindow ?? "-")
-                    </MudTd>
-                    <MudTd DataLabel="Subscription Count">
-                        @(context.Subscriptions?.Count ?? 0)
-                    </MudTd>
-                    <MudTd>
-                        <MudIconButton Icon="@Icons.Material.Filled.Info" Color="Color.Primary" OnClick="@(() => ShowTopicDetails(context))" />
-                    </MudTd>
-                </RowTemplate>
-            </MudTable>
-        </MudPaper>
+        <MudGrid>
+            <!-- Left Pane - TreeView -->
+            <MudItem xs="12" sm="4" md="3">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                    <MudText Typo="Typo.h6" Class="mb-2">Topic Explorer</MudText>
+                    @* <MudTreeView T="string" SelectionMode="SelectionMode.SingleSelection"
+                        SelectedValueChanged="OnSelectedValueChanged">
+                        @foreach (var topic in _topics)
+                        {
+                            <MudTreeViewItem Value="@topic.Name" Text="@topic.Name" Expanded
+                                Icon="@Icons.Material.Filled.Topic">
+                                @foreach (var subscription in topic.Subscriptions)
+                                {
+                                    <MudTreeViewItem Value="@subscription.Name"
+                                        Text="@subscription.Name" Icon="@Icons.Material.Filled.Notifications" />
+                                }
+                            </MudTreeViewItem>
+                        }
+                    </MudTreeView> *@
+                    <MudTreeView T="Identifier" SelectionMode="SelectionMode.SingleSelection"
+                        SelectedValueChanged="OnSelectedValueChanged">
+                        @foreach (var topic in _topics ?? [])
+                        {
+                            <MudTreeViewItem Value="topic.Identifier" Text="@topic.Name" Expanded
+                                Icon="@Icons.Material.Filled.Topic">
+                                @foreach (var subscription in topic.Subscriptions)
+                                {
+                                    <MudTreeViewItem Value="subscription.Identifier"
+                                        Text="@subscription.Name" Icon="@Icons.Material.Filled.Notifications" />
+                                }
+                            </MudTreeViewItem>
+                        }
+                    </MudTreeView>
+                </MudPaper>
+            </MudItem>
+            
+            <!-- Right Pane - Details -->
+            <MudItem xs="12" sm="8" md="9">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                    @if (_selectedNodeId == null)
+                    {
+                        <MudAlert Severity="Severity.Info">Select a topic or subscription from the tree to view details.</MudAlert>
+                    }
+                    else if (_selectedNodeId is TopicIdentifier)
+                    {
+                        <TopicDetailsView Topic="@_selectedTopic" />
+                    }
+                    else if (_selectedNodeId is SubscriptionIdentifier)
+                    {
+                        <SubscriptionDetailsView Subscription="@_selectedSubscription" />
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
     }
 </MudContainer>
-
-@if (_topicDetailsDialogVisible && _selectedTopic != null)
-{
-    <MudDialog open="@_topicDetailsDialogVisible">
-        <TitleContent>
-            <MudText Typo="Typo.h6">
-                <MudIcon Icon="@Icons.Material.Filled.Topic" Size="Size.Small" /> @_selectedTopic.Name
-            </MudText>
-        </TitleContent>
-        <DialogContent>
-            <MudText Typo="Typo.body1">
-                <strong>Requires Duplicate Detection:</strong> @(_selectedTopic.Properties.RequiresDuplicateDetection ? "Yes" : "No")<br/>
-                <strong>Default TTL:</strong> @_selectedTopic.Properties.DefaultMessageTimeToLive<br/>
-                <strong>Duplicate Detection Window:</strong> @(_selectedTopic.Properties.DuplicateDetectionHistoryTimeWindow ?? "-")<br/>
-            </MudText>
-            
-            @if (_selectedTopic.Subscriptions?.Count > 0)
-            {
-                <MudDivider Class="my-4" />
-                <MudText Typo="Typo.h6" Class="mb-3">Subscriptions</MudText>
-                <MudSimpleTable Hover="true" Dense="true" Bordered="true">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Requires Session</th>
-                            <th>Dead Lettering on Expiration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var subscription in _selectedTopic.Subscriptions)
-                        {
-                            <tr>
-                                <td>@subscription.Name</td>
-                                <td>@(subscription.Properties.RequiresSession ? "Yes" : "No")</td>
-                                <td>@(subscription.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")</td>
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
-            }
-        </DialogContent>
-        <DialogActions>
-            <MudButton Color="Color.Primary" OnClick="CloseTopicDetailsDialog">Close</MudButton>
-        </DialogActions>
-    </MudDialog>
-}
-
-@code {
-    private List<ServiceBusTopic>? _topics;
-    private ServiceBusTopic? _selectedTopic;
-    private bool _loading = false;
-    private string? _error;
-    private string _searchString = "";
-    private bool _topicDetailsDialogVisible = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (ConnectionService.IsConnected)
-        {
-            await LoadTopicsAsync();
-        }
-    }
-
-    private async Task LoadTopicsAsync()
-    {
-        try
-        {
-            _loading = true;
-            _error = null;
-            _topics = await ConnectionService.GetTopicsAsync();
-        }
-        catch (Exception ex)
-        {
-            _error = ex.Message;
-        }
-        finally
-        {
-            _loading = false;
-        }
-    }
-
-    private bool FilterFunc(ServiceBusTopic topic)
-    {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-        
-        return topic.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private void ShowTopicDetails(ServiceBusTopic topic)
-    {
-        _selectedTopic = topic;
-        _topicDetailsDialogVisible = true;
-    }
-
-    private void CloseTopicDetailsDialog()
-    {
-        _topicDetailsDialogVisible = false;
-    }
-}

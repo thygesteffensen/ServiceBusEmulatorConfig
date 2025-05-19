@@ -1,0 +1,195 @@
+@if (Subscription == null)
+{
+    <MudText>No subscription selected</MudText>
+}
+else
+{
+    <MudStack>
+        <MudText Typo="Typo.h5" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Notifications" Class="mr-2" /> @Subscription.Name
+        </MudText>
+        
+        <MudDivider />
+        
+        <MudText Typo="Typo.h6">Properties</MudText>
+        
+        <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+            <tbody>
+                <tr>
+                    <td><strong>Requires Session</strong></td>
+                    <td>@(Subscription.Properties.RequiresSession ? "Yes" : "No")</td>
+                </tr>
+                <tr>
+                    <td><strong>Dead Lettering on Message Expiration</strong></td>
+                    <td>@(Subscription.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")</td>
+                </tr>
+                <tr>
+                    <td><strong>Default Message TTL</strong></td>
+                    <td>@Subscription.Properties.DefaultMessageTimeToLive</td>
+                </tr>
+                <tr>
+                    <td><strong>Lock Duration</strong></td>
+                    <td>@Subscription.Properties.LockDuration</td>
+                </tr>
+                <tr>
+                    <td><strong>Max Delivery Count</strong></td>
+                    <td>@Subscription.Properties.MaxDeliveryCount</td>
+                </tr>
+                <tr>
+                    <td><strong>Forward To</strong></td>
+                    <td>@(string.IsNullOrEmpty(Subscription.Properties.ForwardTo) ? "-" : Subscription.Properties.ForwardTo)</td>
+                </tr>
+                <tr>
+                    <td><strong>Forward Dead Lettered Messages To</strong></td>
+                    <td>@(string.IsNullOrEmpty(Subscription.Properties.ForwardDeadLetteredMessagesTo) ? "-" : Subscription.Properties.ForwardDeadLetteredMessagesTo)</td>
+                </tr>
+                <tr>
+                    <td><strong>Message Count</strong></td>
+                    <td>@Subscription.MessageCount</td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+
+        <MudDivider Class="my-3" />
+        
+        <MudText Typo="Typo.h6">Rules (@(Subscription.Rules?.Count ?? 0))</MudText>
+        
+        @if (Subscription.Rules == null || Subscription.Rules.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info">No rules for this subscription</MudAlert>
+        }
+        else
+        {
+            <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Filter Type</th>
+                        <th>Filter Expression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rule in Subscription.Rules)
+                    {
+                        <tr>
+                            <td>@rule.Name</td>
+                            <td>@rule.Properties.FilterType</td>
+                            <td>
+                                @if (rule.Properties.FilterType == "SqlFilter")
+                                {
+                                    @(rule.Properties.SqlFilter?.SqlExpression ?? "-")
+                                }
+                                else if (rule.Properties.FilterType == "CorrelationFilter")
+                                {
+                                    <MudButton Size="Size.Small" 
+                                              Variant="Variant.Outlined" 
+                                              Color="Color.Primary"
+                                              OnClick="@(() => ShowCorrelationFilterDetails(rule))">
+                                        View Filter Details
+                                    </MudButton>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    </MudStack>
+}
+
+@if (_showCorrelationFilterDialog && _selectedRule != null)
+{
+    <MudDialog Open="true" DisableSidePadding="true">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />
+                Correlation Filter Details: @_selectedRule.Name
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudSimpleTable Hover="true" Dense="true">
+                <tbody>
+                    @if (_selectedRule.Properties.CorrelationFilter != null)
+                    {
+                        var filter = _selectedRule.Properties.CorrelationFilter;
+                        
+                        <tr>
+                            <td><strong>Content Type</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.ContentType) ? "-" : filter.ContentType)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Correlation ID</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.CorrelationId) ? "-" : filter.CorrelationId)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Label</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.Label) ? "-" : filter.Label)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Message ID</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.MessageId) ? "-" : filter.MessageId)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reply To</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.ReplyTo) ? "-" : filter.ReplyTo)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reply To Session ID</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.ReplyToSessionId) ? "-" : filter.ReplyToSessionId)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Session ID</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.SessionId) ? "-" : filter.SessionId)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>To</strong></td>
+                            <td>@(string.IsNullOrEmpty(filter.To) ? "-" : filter.To)</td>
+                        </tr>
+                        
+                        @if (filter.Properties != null && filter.Properties.Count > 0)
+                        {
+                            <tr>
+                                <td colspan="2"><strong>Custom Properties</strong></td>
+                            </tr>
+                            
+                            @foreach (var prop in filter.Properties)
+                            {
+                                <tr>
+                                    <td><strong>@prop.Key</strong></td>
+                                    <td>@prop.Value</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </MudSimpleTable>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" OnClick="CloseDialog">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code {
+    [Parameter]
+    public ServiceBusSubscription? Subscription { get; set; }
+    
+    private bool _showCorrelationFilterDialog = false;
+    private ServiceBusRule? _selectedRule;
+    
+    private void ShowCorrelationFilterDetails(ServiceBusRule rule)
+    {
+        _selectedRule = rule;
+        _showCorrelationFilterDialog = true;
+    }
+    
+    private void CloseDialog()
+    {
+        _showCorrelationFilterDialog = false;
+        _selectedRule = null;
+    }
+}
