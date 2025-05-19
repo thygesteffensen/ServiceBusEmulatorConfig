@@ -1,0 +1,117 @@
+@page "/connection"
+@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+
+<PageTitle>Connect - Service Bus Explorer</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudPaper Class="pa-4 my-4">
+        <MudText Typo="Typo.h4" Class="mb-4">Connect to Azure Service Bus</MudText>
+        
+        <MudForm @ref="_form" @bind-IsValid="@_formIsValid">
+            <MudTextField T="string" Label="Connection String" 
+                          @bind-Value="_connectionString" 
+                          Required="true"
+                          Variant="Variant.Outlined"
+                          RequiredError="Connection string is required" 
+                          Adornment="Adornment.End" 
+                          AdornmentIcon="@Icons.Material.Filled.Key"
+                          FullWidth="true" />
+            
+            <div class="d-flex justify-space-between mt-6">
+                <MudButton Variant="Variant.Outlined" 
+                         Color="Color.Secondary" 
+                         Disabled="@_isBusy" 
+                         OnClick="@ClearForm">Clear</MudButton>
+                         
+                <MudButton Variant="Variant.Filled" 
+                         Color="Color.Primary" 
+                         Disabled="@(!_formIsValid || _isBusy)" 
+                         OnClick="@ConnectAsync">
+                    @if (_isBusy)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Connecting</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Connect</MudText>
+                    }
+                </MudButton>
+            </div>
+        </MudForm>
+    </MudPaper>
+    
+    @if (ConnectionService.IsConnected)
+    {
+        <MudAlert Severity="Severity.Success" Class="mt-4">
+            Currently connected to: @_connectedNamespace
+        </MudAlert>
+    }
+
+    <MudExpansionPanels Class="mt-4">
+        <MudExpansionPanel>
+            <TitleContent>
+                <MudText Typo="Typo.subtitle1">How to get connection string</MudText>
+            </TitleContent>
+            <ChildContent>
+                <MudText Typo="Typo.body2" Class="pa-4">
+                    <ol>
+                        <li>Go to the Azure Portal</li>
+                        <li>Navigate to your Service Bus namespace</li>
+                        <li>Under "Settings", select "Shared access policies"</li>
+                        <li>Select "RootManageSharedAccessKey" (or create a policy with Manage rights)</li>
+                        <li>Copy the "Primary Connection String" value</li>
+                        <li>Paste it into the field above</li>
+                    </ol>
+                </MudText>
+            </ChildContent>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+</MudContainer>
+
+@code {
+    private string _connectionString = "";
+    private string _connectedNamespace = "";
+    private bool _formIsValid = false;
+    private bool _isBusy = false;
+    private MudForm _form = null!;
+
+    protected override void OnInitialized()
+    {
+        if (ConnectionService.IsConnected)
+        {
+            _connectionString = ConnectionService.ConnectionString;
+        }
+    }
+
+    private void ClearForm()
+    {
+        _connectionString = "";
+        _form.ResetAsync();
+    }
+
+    private async Task ConnectAsync()
+    {
+        try
+        {
+            _isBusy = true;
+            await ConnectionService.ConnectAsync(_connectionString);
+            
+            var namespaceDetails = await ConnectionService.GetNamespaceDetailsAsync();
+            _connectedNamespace = namespaceDetails.Name;
+            
+            Snackbar.Add("Successfully connected to Service Bus", Severity.Success);
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Failed to connect: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+    }
+}
