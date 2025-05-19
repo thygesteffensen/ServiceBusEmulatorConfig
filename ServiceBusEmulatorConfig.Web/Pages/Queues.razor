@@ -1,0 +1,149 @@
+@page "/queues"
+@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+@inject ISnackbar Snackbar
+
+<PageTitle>Queues - Service Bus Explorer</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" Class="mb-4">Service Bus Queues</MudText>
+
+    @if (!ConnectionService.IsConnected)
+    {
+        <MudAlert Severity="Severity.Warning" Class="mb-4">
+            Not connected to any Service Bus namespace. Please <MudLink Href="connection">connect first</MudLink>.
+        </MudAlert>
+    }
+    else if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" Class="mb-4" />
+        <MudText>Loading queues...</MudText>
+    }
+    else if (_error != null)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">
+            Error loading queues: @_error
+        </MudAlert>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadQueuesAsync">Retry</MudButton>
+    }
+    else if (_queues?.Count == 0)
+    {
+        <MudAlert Severity="Severity.Info" Class="mb-4">
+            No queues found in this Service Bus namespace.
+        </MudAlert>
+    }
+    else
+    {
+        <MudPaper Class="pa-4 mb-4">
+            <MudTable Items="@_queues" Dense="true" Hover="true" Bordered="true" Striped="true" 
+                       T="ServiceBusQueue" @bind-SelectedItem="_selectedQueue" Filter="FilterFunc">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Queues</MudText>
+                    <MudSpacer />
+                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" 
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Max Delivery Count</MudTh>
+                    <MudTh>Requires Session</MudTh>
+                    <MudTh>Dead Lettering on Expiration</MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Max Delivery Count">@context.Properties.MaxDeliveryCount</MudTd>
+                    <MudTd DataLabel="Requires Session">
+                        @(context.Properties.RequiresSession ? "Yes" : "No")
+                    </MudTd>
+                    <MudTd DataLabel="Dead Lettering on Expiration">
+                        @(context.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")
+                    </MudTd>
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Info" Color="Color.Primary" OnClick="@(() => ShowQueueDetails(context))" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    }
+</MudContainer>
+
+@if (_queueDetailsDialogVisible && _selectedQueue != null)
+{
+    <MudDialog open="@_queueDetailsDialogVisible">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.List" Size="Size.Small" /> @_selectedQueue.Name
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudText Typo="Typo.body1">
+                <strong>Max Delivery Count:</strong> @_selectedQueue.Properties.MaxDeliveryCount<br/>
+                <strong>Requires Session:</strong> @(_selectedQueue.Properties.RequiresSession ? "Yes" : "No")<br/>
+                <strong>Dead Lettering on Expiration:</strong> @(_selectedQueue.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")<br/>
+                <strong>Default TTL:</strong> @_selectedQueue.Properties.DefaultMessageTimeToLive<br/>
+                <strong>Lock Duration:</strong> @_selectedQueue.Properties.LockDuration<br/>
+                <strong>Forward To:</strong> @(string.IsNullOrEmpty(_selectedQueue.Properties.ForwardTo) ? "-" : _selectedQueue.Properties.ForwardTo)<br/>
+                <strong>Forward DLQ Messages To:</strong> @(string.IsNullOrEmpty(_selectedQueue.Properties.ForwardDeadLetteredMessagesTo) ? "-" : _selectedQueue.Properties.ForwardDeadLetteredMessagesTo)<br/>
+                <strong>Requires Duplicate Detection:</strong> @(_selectedQueue.Properties.RequiresDuplicateDetection ? "Yes" : "No")<br/>
+                <strong>Duplicate Detection Window:</strong> @_selectedQueue.Properties.DuplicateDetectionHistoryTimeWindow
+            </MudText>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" OnClick="CloseQueueDetailsDialog">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code {
+    private List<ServiceBusQueue>? _queues;
+    private ServiceBusQueue? _selectedQueue;
+    private bool _loading = false;
+    private string? _error;
+    private string _searchString = "";
+    private bool _queueDetailsDialogVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ConnectionService.IsConnected)
+        {
+            await LoadQueuesAsync();
+        }
+    }
+
+    private async Task LoadQueuesAsync()
+    {
+        try
+        {
+            _loading = true;
+            _error = null;
+            _queues = await ConnectionService.GetQueuesAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private bool FilterFunc(ServiceBusQueue queue)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+        
+        return queue.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ShowQueueDetails(ServiceBusQueue queue)
+    {
+        _selectedQueue = queue;
+        _queueDetailsDialogVisible = true;
+    }
+
+    private void CloseQueueDetailsDialog()
+    {
+        _queueDetailsDialogVisible = false;
+    }
+}
