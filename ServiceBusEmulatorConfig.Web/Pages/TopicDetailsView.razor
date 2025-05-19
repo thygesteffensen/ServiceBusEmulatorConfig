@@ -1,0 +1,76 @@
+@if (Topic == null)
+{
+    <MudText>No topic selected</MudText>
+}
+else
+{
+    <MudStack>
+        <MudText Typo="Typo.h5" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Topic" Class="mr-2" /> @Topic.Name
+        </MudText>
+        
+        <MudDivider />
+        
+        <MudText Typo="Typo.h6">Properties</MudText>
+        
+        <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+            <tbody>
+                <tr>
+                    <td><strong>Requires Duplicate Detection</strong></td>
+                    <td>@(Topic.Properties.RequiresDuplicateDetection ? "Yes" : "No")</td>
+                </tr>
+                <tr>
+                    <td><strong>Default Message TTL</strong></td>
+                    <td>@Topic.Properties.DefaultMessageTimeToLive</td>
+                </tr>
+                <tr>
+                    <td><strong>Duplicate Detection Window</strong></td>
+                    <td>@(Topic.Properties.DuplicateDetectionHistoryTimeWindow ?? "-")</td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+
+        <MudDivider Class="my-3" />
+        
+        <MudText Typo="Typo.h6">Subscriptions (@(Topic.Subscriptions?.Count ?? 0))</MudText>
+        
+        @if (Topic.Subscriptions == null || Topic.Subscriptions.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info">No subscriptions for this topic</MudAlert>
+        }
+        else
+        {
+            <MudDataGrid T="ServiceBusSubscription" 
+                         Items="@Topic.Subscriptions" 
+                         Dense="true" 
+                         Hover="true"
+                         Bordered="true"
+                         Striped="true"
+                         Height="300px">
+                <Columns>
+                    <PropertyColumn Property="@(x => x.Name)" Title="Name" />
+                    <TemplateColumn Title="Requires Session">
+                        <CellTemplate>
+                            @(context.Item.Properties.RequiresSession ? "Yes" : "No")
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Dead Lettering on Expiration">
+                        <CellTemplate>
+                            @(context.Item.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Message Count">
+                        <CellTemplate>
+                            @context.Item.MessageCount
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        }
+    </MudStack>
+}
+
+@code {
+    [Parameter]
+    public ServiceBusTopic? Topic { get; set; }
+}

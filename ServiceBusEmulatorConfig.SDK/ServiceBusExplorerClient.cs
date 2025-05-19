@@ -102,6 +102,7 @@ namespace ServiceBusEmulatorConfig.SDK
                 var subscription = new ServiceBusSubscription
                 (
                     Name: subscriptionProperties.SubscriptionName,
+                    TopicName: topicName,
                     Properties: new Core.Models.Emulator.SubscriptionProperties
                     {
                         DeadLetteringOnMessageExpiration = subscriptionProperties.DeadLetteringOnMessageExpiration,
