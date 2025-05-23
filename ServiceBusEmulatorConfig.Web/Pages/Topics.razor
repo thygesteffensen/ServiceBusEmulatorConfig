@@ -1,4 +1,5 @@
 @page "/topics"
+@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
 @inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
 @inject ISnackbar Snackbar
 
@@ -53,7 +54,7 @@
                         }
                     </MudTreeView> *@
                     <MudTreeView T="Identifier" SelectionMode="SelectionMode.SingleSelection"
-                        SelectedValueChanged="OnSelectedValueChanged">
+                        SelectedValueChanged="OnSelectedValueChanged!">
                         @foreach (var topic in _topics ?? [])
                         {
                             <MudTreeViewItem Value="topic.Identifier" Text="@topic.Name" Expanded

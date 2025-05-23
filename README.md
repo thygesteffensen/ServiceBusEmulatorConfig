@@ -10,7 +10,6 @@
 - Peak messages
 - Send messages
 
-
 ## The tool
 
 Install the NuGet.org version as: `$ dotnet tool install --global ServiceBusEmulatorConfig.Cli`, it is invoked by `$ sbconfig`.
@@ -18,10 +17,10 @@ Install the NuGet.org version as: `$ dotnet tool install --global ServiceBusEmul
 **Install, or update, from source:**
 
 1. `$ pushd ServiceBusEmulatorConfig.Cli`
-2. `$ dotnet package -c Release -p:PackageVersion 1.0.1 `
-3. `$ dotnet tool install -g SerbiceBusEumlatorConfig.Tool --add-source nupkg/`
+2. `$ dotnet pack -c Release -p:PackageVersion 1.0.1 `
+3. `$ dotnet tool install -g SerbiceBusEumlatorConfig.Cli --add-source nupkg/`
 
-### ARM to eumulator config
+### ARM to emulator config
 The ARM template must be manually downloaded or compiled using `$ az bicep build --file <bicep.bicep>`
 ```sh
 $ sbconfig transform --help

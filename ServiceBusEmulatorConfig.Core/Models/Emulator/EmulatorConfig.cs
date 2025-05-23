@@ -2,13 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace ServiceBusEmulatorConfig.Core.Models.Emulator;
 
-public class EmulatorConfig
+public record EmulatorConfig
 {
     [JsonPropertyName("UserConfig")]
     public UserConfig UserConfig { get; set; }
 }
 
-public class UserConfig
+public record UserConfig
 {
     [JsonPropertyName("Namespaces")]
     public List<Namespace> Namespaces { get; set; }
@@ -17,13 +17,13 @@ public class UserConfig
     public Logging Logging { get; set; }
 }
 
-public class Logging
+public record Logging
 {
     [JsonPropertyName("Type")]
     public string Type { get; set; } = "File";
 }
 
-public class Namespace
+public record Namespace
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
@@ -35,7 +35,7 @@ public class Namespace
     public List<Topic> Topics { get; set; } = new List<Topic>();
 }
 
-public class Queue
+public record Queue
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
@@ -44,7 +44,7 @@ public class Queue
     public QueueProperties Properties { get; set; }
 }
 
-public class QueueProperties
+public record QueueProperties
 {
     [JsonPropertyName("DeadLetteringOnMessageExpiration")]
     public bool DeadLetteringOnMessageExpiration { get; set; }
@@ -74,7 +74,7 @@ public class QueueProperties
     public bool RequiresSession { get; set; }
 }
 
-public class Topic
+public record Topic
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
@@ -86,7 +86,7 @@ public class Topic
     public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 }
 
-public class TopicProperties
+public record TopicProperties
 {
     [JsonPropertyName("DefaultMessageTimeToLive")]
     public string DefaultMessageTimeToLive { get; set; }
@@ -98,7 +98,7 @@ public class TopicProperties
     public bool RequiresDuplicateDetection { get; set; }
 }
 
-public class Subscription
+public record Subscription
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
@@ -110,7 +110,7 @@ public class Subscription
     public List<Rule> Rules { get; set; } = new List<Rule>();
 }
 
-public class SubscriptionProperties
+public record SubscriptionProperties
 {
     [JsonPropertyName("DeadLetteringOnMessageExpiration")]
     public bool DeadLetteringOnMessageExpiration { get; set; }
@@ -134,7 +134,7 @@ public class SubscriptionProperties
     public bool RequiresSession { get; set; }
 }
 
-public class Rule
+public record Rule
 {
     [JsonPropertyName("Name")]
     public string Name { get; set; }
@@ -143,7 +143,7 @@ public class Rule
     public RuleProperties Properties { get; set; }
 }
 
-public class RuleProperties
+public record RuleProperties
 {
     [JsonPropertyName("FilterType")]
     public string FilterType { get; set; }
@@ -158,19 +158,19 @@ public class RuleProperties
     public SqlAction Action { get; set; }
 }
 
-public class SqlFilter
+public record SqlFilter
 {
     [JsonPropertyName("SqlExpression")]
     public string SqlExpression { get; set; }
 }
 
-public class SqlAction
+public record SqlAction
 {
     [JsonPropertyName("SqlExpression")]
     public string SqlExpression { get; set; }
 }
 
-public class CorrelationFilter
+public record CorrelationFilter
 {
     [JsonPropertyName("ContentType")]
     public string ContentType { get; set; }

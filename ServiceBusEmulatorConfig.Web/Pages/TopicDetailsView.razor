@@ -1,3 +1,4 @@
+@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
 @if (Topic == null)
 {
     <MudText>No topic selected</MudText>
@@ -25,16 +26,16 @@ else
                 </tr>
                 <tr>
                     <td><strong>Duplicate Detection Window</strong></td>
-                    <td>@(Topic.Properties.DuplicateDetectionHistoryTimeWindow ?? "-")</td>
+                    <td>@Topic.Properties.DuplicateDetectionHistoryTimeWindow</td>
                 </tr>
             </tbody>
         </MudSimpleTable>
 
         <MudDivider Class="my-3" />
         
-        <MudText Typo="Typo.h6">Subscriptions (@(Topic.Subscriptions?.Count ?? 0))</MudText>
+        <MudText Typo="Typo.h6">Subscriptions (@Topic.Subscriptions.Count)</MudText>
         
-        @if (Topic.Subscriptions == null || Topic.Subscriptions.Count == 0)
+        @if (Topic.Subscriptions.Count == 0)
         {
             <MudAlert Severity="Severity.Info">No subscriptions for this topic</MudAlert>
         }

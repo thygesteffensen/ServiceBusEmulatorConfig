@@ -1,6 +1,6 @@
 @page "/queues"
-@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
-@inject ISnackbar Snackbar
+@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
+@inject Services.ServiceBusConnectionService ConnectionService
 
 <PageTitle>Queues - Service Bus Explorer</PageTitle>
 
@@ -97,10 +97,10 @@
 @code {
     private List<ServiceBusQueue>? _queues;
     private ServiceBusQueue? _selectedQueue;
-    private bool _loading = false;
+    private bool _loading;
     private string? _error;
     private string _searchString = "";
-    private bool _queueDetailsDialogVisible = false;
+    private bool _queueDetailsDialogVisible;
 
     protected override async Task OnInitializedAsync()
     {
