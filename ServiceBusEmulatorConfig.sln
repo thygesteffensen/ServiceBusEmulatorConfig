@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Cli", "ServiceBusEmulatorConfig.Cli\ServiceBusEmulatorConfig.Cli.csproj", "{685BF6C6-5331-4605-B3C1-43D39ACFA7D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.SDK", "ServiceBusEmulatorConfig.SDK\ServiceBusEmulatorConfig.SDK.csproj", "{73664E15-D12F-4779-8EBE-21ED4818157E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Web", "ServiceBusEmulatorConfig.Web\ServiceBusEmulatorConfig.Web.csproj", "{C1F36325-1A88-4EB2-8869-78AAA7306CF6}"
 EndProject
 Global
@@ -45,18 +43,6 @@ Global
 		{685BF6C6-5331-4605-B3C1-43D39ACFA7D8}.Release|x64.Build.0 = Release|Any CPU
 		{685BF6C6-5331-4605-B3C1-43D39ACFA7D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{685BF6C6-5331-4605-B3C1-43D39ACFA7D8}.Release|x86.Build.0 = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|x64.Build.0 = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Debug|x86.Build.0 = Debug|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|x64.ActiveCfg = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|x64.Build.0 = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|x86.ActiveCfg = Release|Any CPU
-		{73664E15-D12F-4779-8EBE-21ED4818157E}.Release|x86.Build.0 = Release|Any CPU
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Debug|x64.ActiveCfg = Debug|Any CPU
