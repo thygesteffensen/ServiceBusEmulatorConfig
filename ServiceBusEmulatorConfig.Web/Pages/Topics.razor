@@ -1,0 +1,92 @@
+@page "/topics"
+@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
+@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+@inject ISnackbar Snackbar
+
+<PageTitle>Topics - Service Bus Explorer</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" Class="mb-4">Service Bus Topics</MudText>
+
+    @if (!ConnectionService.IsConnected)
+    {
+        <MudAlert Severity="Severity.Warning" Class="mb-4">
+            Not connected to any Service Bus namespace. Please <MudLink Href="connection">connect first</MudLink>.
+        </MudAlert>
+    }
+    else if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" Class="mb-4" />
+        <MudText>Loading topics...</MudText>
+    }
+    else if (_error != null)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">
+            Error loading topics: @_error
+        </MudAlert>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadTopicsAsync">Retry</MudButton>
+    }
+    else if (_topics?.Count == 0)
+    {
+        <MudAlert Severity="Severity.Info" Class="mb-4">
+            No topics found in this Service Bus namespace.
+        </MudAlert>
+    }
+    else
+    {
+        <MudGrid>
+            <!-- Left Pane - TreeView -->
+            <MudItem xs="12" sm="4" md="3">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                    <MudText Typo="Typo.h6" Class="mb-2">Topic Explorer</MudText>
+                    @* <MudTreeView T="string" SelectionMode="SelectionMode.SingleSelection"
+                        SelectedValueChanged="OnSelectedValueChanged">
+                        @foreach (var topic in _topics)
+                        {
+                            <MudTreeViewItem Value="@topic.Name" Text="@topic.Name" Expanded
+                                Icon="@Icons.Material.Filled.Topic">
+                                @foreach (var subscription in topic.Subscriptions)
+                                {
+                                    <MudTreeViewItem Value="@subscription.Name"
+                                        Text="@subscription.Name" Icon="@Icons.Material.Filled.Notifications" />
+                                }
+                            </MudTreeViewItem>
+                        }
+                    </MudTreeView> *@
+                    <MudTreeView T="Identifier" SelectionMode="SelectionMode.SingleSelection"
+                        SelectedValueChanged="OnSelectedValueChanged!">
+                        @foreach (var topic in _topics ?? [])
+                        {
+                            <MudTreeViewItem Value="topic.Identifier" Text="@topic.Name" Expanded
+                                Icon="@Icons.Material.Filled.Topic">
+                                @foreach (var subscription in topic.Subscriptions)
+                                {
+                                    <MudTreeViewItem Value="subscription.Identifier"
+                                        Text="@subscription.Name" Icon="@Icons.Material.Filled.Notifications" />
+                                }
+                            </MudTreeViewItem>
+                        }
+                    </MudTreeView>
+                </MudPaper>
+            </MudItem>
+            
+            <!-- Right Pane - Details -->
+            <MudItem xs="12" sm="8" md="9">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                    @if (_selectedNodeId == null)
+                    {
+                        <MudAlert Severity="Severity.Info">Select a topic or subscription from the tree to view details.</MudAlert>
+                    }
+                    else if (_selectedNodeId is TopicIdentifier)
+                    {
+                        <TopicDetailsView Topic="@_selectedTopic" />
+                    }
+                    else if (_selectedNodeId is SubscriptionIdentifier)
+                    {
+                        <SubscriptionDetailsView Subscription="@_selectedSubscription" />
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    }
+</MudContainer>

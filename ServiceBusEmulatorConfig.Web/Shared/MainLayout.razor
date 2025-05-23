@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>Service Bus Explorer</PageTitle>
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h5" Class="ml-3">Service Bus Explorer</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Info" Color="Color.Inherit" Edge="Edge.End" Href="https://github.com/paolosalvatori/ServiceBusExplorer" Target="_blank" />
+    </MudAppBar>
+    <MudDrawer Open="@_drawerOpen" OpenChanged="@((value) => _drawerOpen = value)" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4 pt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

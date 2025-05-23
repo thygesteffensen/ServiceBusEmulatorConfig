@@ -1,0 +1,97 @@
+﻿@page "/"
+@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
+@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+
+<PageTitle>Dashboard - Service Bus Explorer</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudPaper Class="pa-4 my-4">
+        <MudText Typo="Typo.h4" Class="mb-4">Welcome to Service Bus Explorer</MudText>
+        <MudText Typo="Typo.body1">
+            This application helps you explore Azure Service Bus resources and export configurations for local development.
+        </MudText>
+    </MudPaper>
+
+    @if (ConnectionService.IsConnected)
+    {
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h5" Class="mb-4">Namespace</MudText>
+                    <MudText Typo="Typo.body1">@_namespace?.Name</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-4" Elevation="3">
+                    <MudText Typo="Typo.h5" Class="mb-4">Status</MudText>
+                    <MudText Typo="Typo.body1" Color="Color.Success">Connected</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-4 d-flex flex-column" Elevation="3" Style="height: 150px;">
+                    <MudText Typo="Typo.h5">Queues</MudText>
+                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@(_queues?.Count ?? 0)</MudText>
+                    <MudButton Href="queues" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">View Queues</MudButton>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudPaper Class="pa-4 d-flex flex-column" Elevation="3" Style="height: 150px;">
+                    <MudText Typo="Typo.h5">Topics</MudText>
+                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@(_topics?.Count ?? 0)</MudText>
+                    <MudButton Href="topics" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">View Topics</MudButton>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+        
+        <MudPaper Class="pa-4 my-4" Elevation="3">
+            <MudGrid>
+                <MudItem xs="12" md="8">
+                    <MudText Typo="Typo.h5">Export Configuration</MudText>
+                    <MudText Typo="Typo.body1" Class="mt-2">
+                        Export your Service Bus configuration for local development with emulators.
+                    </MudText>
+                </MudItem>
+                <MudItem xs="12" md="4" Class="d-flex align-center justify-end">
+                    <MudButton Href="export" Variant="Variant.Filled" Color="Color.Secondary">
+                        Export Configuration
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info" Class="my-4">
+            You're not connected to any Service Bus namespace. Please connect first.
+        </MudAlert>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="connection">Connect Now</MudButton>
+    }
+</MudContainer>
+
+@code {
+    private ServiceBusNamespace? _namespace;
+    private List<ServiceBusQueue>? _queues;
+    private List<ServiceBusTopic>? _topics;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ConnectionService.IsConnected)
+        {
+            await LoadData();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            _namespace = await ConnectionService.GetNamespaceDetailsAsync();
+            _queues = await ConnectionService.GetQueuesAsync();
+            _topics = await ConnectionService.GetTopicsAsync();
+        }
+        catch (Exception)
+        {
+            // Handle error
+        }
+    }
+}
