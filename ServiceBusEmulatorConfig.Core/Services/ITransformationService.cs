@@ -13,14 +13,6 @@ public interface ITransformationService
     EmulatorConfig TransformArmToEmulatorConfig(string armJson, string namespaceName);
 
     /// <summary>
-    /// Transforms Azure Service Bus ARM template from file into Emulator configuration
-    /// </summary>
-    /// <param name="armJsonPath">Path to the ARM template JSON file</param>
-    /// <param name="namespaceName">The target namespace name for the emulator</param>
-    /// <returns>Emulator configuration object</returns>
-    Task<EmulatorConfig> TransformArmToEmulatorConfigAsync(string armJsonPath, string namespaceName);
-
-    /// <summary>
     /// Serializes the Emulator configuration to JSON
     /// </summary>
     /// <param name="config">The Emulator configuration object</param>

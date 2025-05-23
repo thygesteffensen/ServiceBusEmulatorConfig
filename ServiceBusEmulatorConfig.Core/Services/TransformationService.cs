@@ -202,18 +202,6 @@ public class TransformationService : ITransformationService
         return emulatorConfig;
     }
 
-    public async Task<EmulatorConfig> TransformArmToEmulatorConfigAsync(string armJsonPath, string namespaceName)
-    {
-        try
-        {
-            var armJson = await File.ReadAllTextAsync(armJsonPath);
-            return TransformArmToEmulatorConfig(armJson, namespaceName);
-        }
-        catch (Exception ex) when (ex is not ArgumentException)
-        {
-            throw new ArgumentException($"Failed to read or process file {armJsonPath}: {ex.Message}", ex);
-        }
-    }
 
     public string SerializeEmulatorConfig(EmulatorConfig config)
     {
