@@ -243,7 +243,7 @@ public class ServiceBusExplorerClient(string connectionString)
         {
             if (!part.StartsWith("Endpoint=", StringComparison.OrdinalIgnoreCase)) continue;
 
-            var endpoint = part["Endpoint=".Length..];
+            var endpoint = part.Substring("Endpoint=".Length);
             var uri = new Uri(endpoint);
             return uri.Host.Split('.')[0];
         }

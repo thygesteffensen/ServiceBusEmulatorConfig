@@ -56,9 +56,11 @@ Given the [example](https://learn.microsoft.com/en-us/azure/service-bus-messagin
 ### Inspect Azure Service Bus Namespace
 Until [Azure/azure-service-bus-emulator-installer/issues/17](https://github.com/Azure/azure-service-bus-emulator-installer/issues/17) have been resolved, we cannot use the explorer (or any viwer) for the emulator...
 
-But the explorer is cross platform, and can be launched as `$ sbconfig explorer`.
+~~But the explorer is cross platform, and can be launched as `$ sbconfig explorer`.~~
 
-This launched as local web api and the explorer is simply a webinterface - crossplatform without hazzle :)
+~~This launched as local web api and the explorer is simply a webinterface - crossplatform without hazzle :)~~
+
+For now, the repo must be cloned and executed manually.
  
 ## Contribute
 

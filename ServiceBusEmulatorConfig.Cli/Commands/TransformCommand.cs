@@ -53,7 +53,7 @@ public class TransformCommand : Command
             Console.WriteLine($"Target namespace: {namespaceName}");
 
             var transformService = new TransformationService();
-            var config = await transformService.TransformArmToEmulatorConfigAsync(input.FullName, namespaceName);
+            var config = transformService.TransformArmToEmulatorConfig(input.FullName, namespaceName);
             var configJson = transformService.SerializeEmulatorConfig(config);
                 
             // Ensure output directory exists
