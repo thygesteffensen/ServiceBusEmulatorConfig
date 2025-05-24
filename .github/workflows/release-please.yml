@@ -41,26 +41,38 @@ jobs:
         if: ${{ steps.release.outputs.releases_created }}
         run: mkdir -p nuget-packages
   
-      # Build and pack Core project if it was released
+      # Build and pack all projects when a release is created
+      - name: Display Release Output
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          echo "Release created: ${{ steps.release.outputs.releases_created }}"
+          echo "Release tag: ${{ steps.release.outputs.tag_name }}"
+          echo "Version: ${{ steps.release.outputs.version }}"
+          echo "Major: ${{ steps.release.outputs.major }}"
+          echo "Minor: ${{ steps.release.outputs.minor }}"
+          echo "Patch: ${{ steps.release.outputs.patch }}"
+          echo "All outputs: ${{ toJSON(steps.release.outputs) }}"
+          
+      # Build and pack Core project
       - name: Build and Pack Core
-        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Core'] }}
+        if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Core --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Core--version'] }}
-          dotnet pack ServiceBusEmulatorConfig.Core --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Core--version'] }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Core --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version || '1.0.0' }}
+          dotnet pack ServiceBusEmulatorConfig.Core --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version || '1.0.0' }} --output nuget-packages
           
-      # Build and pack Web project if it was released
+      # Build and pack Web project
       - name: Build and Pack Web
-        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Web'] }}
+        if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Web --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Web--version'] }}
-          dotnet pack ServiceBusEmulatorConfig.Web --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Web--version'] }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Web --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version || '1.0.0' }}
+          dotnet pack ServiceBusEmulatorConfig.Web --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version || '1.0.0' }} --output nuget-packages
           
-      # Build and pack CLI project if it was released
+      # Build and pack CLI project
       - name: Build and Pack CLI
-        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Cli'] }}
+        if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }}
-          dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version || '1.0.0' }}
+          dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version || '1.0.0' }} --output nuget-packages
         
       # List packages for debugging
       - name: List Packages

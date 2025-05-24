@@ -2,15 +2,18 @@
   "packages": {
     "ServiceBusEmulatorConfig.Core": {
       "package-name": "ServiceBusEmulatorConfig.Core",
-      "release-type": "simple"
+      "release-type": "simple",
+      "component": "core"
     },
     "ServiceBusEmulatorConfig.Web": {
       "package-name": "ServiceBusEmulatorConfig.Web",
-      "release-type": "simple"
+      "release-type": "simple",
+      "component": "web"
     },
     "ServiceBusEmulatorConfig.Cli": {
       "package-name": "ServiceBusEmulatorConfig.Cli",
-      "release-type": "simple" 
+      "release-type": "simple",
+      "component": "cli"
     }
   },
   "plugins": [
@@ -20,6 +23,7 @@
   "bootstrap-sha": "95045d34304e52f0364a99dea02bbec7bb0b3bc7",
   "include-v-in-tag": true,
   "release-search-depth": 10,
+  "changelog-path": "CHANGELOG.md",
   "changelog-sections": [
     { "type": "feat", "section": "Features" },
     { "type": "fix", "section": "Bug Fixes" },
