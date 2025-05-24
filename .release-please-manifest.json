@@ -1,5 +1,6 @@
 {
   "ServiceBusEmulatorConfig.Core": "1.0.0",
   "ServiceBusEmulatorConfig.Web": "1.0.0",
-  "ServiceBusEmulatorConfig.Cli": "1.0.0"
+  "ServiceBusEmulatorConfig.Cli": "1.0.0",
+  ".": "1.1.0"
 }
