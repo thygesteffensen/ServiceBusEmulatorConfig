@@ -7,9 +7,11 @@ branches:
     releaseType: simple
     prerelease: false
     bumpMinorPreMajor: true
+    initialVersion: "1.0.0"
   dev:
     releaseType: simple
     prerelease: true
     prereleaseSuffix: rc
-    preTitlePattern: "chore${scope}: release ${component} ${version}"
+    preTitlePattern: "chore${scope}: release${component} ${version}"
     bumpMinorPreMajor: true
+    initialVersion: "1.0.0"
