@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/thygesteffensen/ServiceBusEmulatorConfig/compare/v1.0.0...v1.1.0) (2025-05-24)
+
+
+### Features
+
+* **cli:** First relase ([33fbfb5](https://github.com/thygesteffensen/ServiceBusEmulatorConfig/commit/33fbfb534c1e2dff156d731624acb21ae9863774))
+
 ## 1.0.0 (2025-05-24)
 
 
