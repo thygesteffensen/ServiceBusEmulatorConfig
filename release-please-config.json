@@ -9,6 +9,11 @@
   "include-v-in-tag": true,
   "release-search-depth": 10,
   "changelog-path": "CHANGELOG.md",
+  "packages": {
+    ".": {}
+  },
+  "draft": false,
+  "prerelease": "${isPrerelease}",
   "changelog-sections": [
     { "type": "feat", "section": "Features" },
     { "type": "fix", "section": "Bug Fixes" },
