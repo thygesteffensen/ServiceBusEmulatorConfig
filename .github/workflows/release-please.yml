@@ -1,0 +1,69 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          release-type: dotnet
+          target-branch: ${{ github.ref_name }}
+          
+      # Only run the following steps if releases were created
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.releases_created }}
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          dotnet-version: 9.0.x
+          
+      - name: Restore dependencies
+        run: dotnet restore
+        if: ${{ steps.release.outputs.releases_created }}
+        
+      # Build and pack Core project if it was released
+      - name: Build and Pack Core
+        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Core'] }}
+        run: |
+          dotnet build ServiceBusEmulatorConfig.Core --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Core--version'] }}
+          dotnet pack ServiceBusEmulatorConfig.Core --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Core--version'] }} --output nuget-packages
+          
+      # Build and pack Web project if it was released
+      - name: Build and Pack Web
+        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Web'] }}
+        run: |
+          dotnet build ServiceBusEmulatorConfig.Web --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Web--version'] }}
+          dotnet pack ServiceBusEmulatorConfig.Web --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Web--version'] }} --output nuget-packages
+          
+      # Build and pack CLI project if it was released
+      - name: Build and Pack CLI
+        if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Cli'] }}
+        run: |
+          dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }}
+          dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }} --output nuget-packages
+
+      # List packages for debugging
+      - name: List Packages
+        if: ${{ steps.release.outputs.releases_created }}
+        run: ls -la nuget-packages
+
+      # Push packages to NuGet
+      - name: Push to NuGet
+        if: ${{ steps.release.outputs.releases_created }}
+        run: dotnet nuget push nuget-packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
