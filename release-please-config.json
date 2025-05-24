@@ -1,0 +1,20 @@
+{
+  "packages": {
+    "ServiceBusEmulatorConfig.Core": {
+      "package-name": "ServiceBusEmulatorConfig.Core",
+      "release-type": "dotnet"
+    },
+    "ServiceBusEmulatorConfig.Web": {
+      "package-name": "ServiceBusEmulatorConfig.Web",
+      "release-type": "dotnet"
+    },
+    "ServiceBusEmulatorConfig.Cli": {
+      "package-name": "ServiceBusEmulatorConfig.Cli",
+      "release-type": "dotnet" 
+    }
+  },
+  "plugins": [
+    "sentence-case"
+  ],
+  "release-type": "dotnet"
+}

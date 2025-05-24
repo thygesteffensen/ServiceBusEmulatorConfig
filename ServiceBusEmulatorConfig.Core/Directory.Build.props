@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Thyge Skødt Steffensen</Authors>
+    <PackageDescription>Core library for Azure Service Bus Emulator Configuration</PackageDescription>
+    <RepositoryUrl>https://github.com/thygesen/ServiceBusEmulatorConfig</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+</Project>
