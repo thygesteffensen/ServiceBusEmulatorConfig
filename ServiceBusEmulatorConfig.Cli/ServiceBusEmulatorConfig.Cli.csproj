@@ -10,7 +10,8 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>tst.sbconfig</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
-
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
 
         <!-- NuGet package metadata -->
         <PackageId>ServiceBusEmulatorConfig.Cli</PackageId>

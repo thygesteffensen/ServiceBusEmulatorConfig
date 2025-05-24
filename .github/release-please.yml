@@ -1,0 +1,15 @@
+handleGHRelease: true
+releaseLabels:
+  - "release"
+  - "automated pr"
+branches:
+  main:
+    releaseType: simple
+    prerelease: false
+    bumpMinorPreMajor: true
+  dev:
+    releaseType: simple
+    prerelease: true
+    prereleaseSuffix: rc
+    preTitlePattern: "chore${scope}: release ${component} ${version}"
+    bumpMinorPreMajor: true
