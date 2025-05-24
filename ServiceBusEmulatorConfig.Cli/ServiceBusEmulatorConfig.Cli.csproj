@@ -1,31 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
 
-    <!-- .NET Tool specific properties -->
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>tst.sbconfig</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
+        <!-- .NET Tool specific properties -->
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>tst.sbconfig</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
 
+        <!-- NuGet package metadata -->
+        <PackageId>ServiceBusEmulatorConfig.Cli</PackageId>
+        <Authors>Thyge Skødt Steffensen</Authors>
+        <Description>Azure Service Bus Emulator Configuration Tool</Description>
+        <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
+    </PropertyGroup>
 
-    <!-- NuGet package metadata -->
-    <PackageId>ServiceBusEmulatorConfig.Cli</PackageId>
-    <Authors>Thyge Skødt Steffensen</Authors>
-    <Description>Azure Service Bus Emulator Configuration Tool</Description>
-    <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
-  </PropertyGroup>
+    <ItemGroup>
+        <Content Include="wwwroot\**\*">
+            <PackagePath>contentFiles\any\any\wwwroot\</PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference
-      Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz1\ServiceBusEmulatorConfig.Blaz1.csproj" />-->
+        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz2\ServiceBusEmulatorConfig.Blaz2.csproj" />-->
+        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz\ServiceBusEmulatorConfig.Blaz.csproj" />-->
+        <ProjectReference Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj"/>
+        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Web\ServiceBusEmulatorConfig.Web.csproj" />-->
+    </ItemGroup>
 
 </Project>
