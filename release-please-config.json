@@ -15,5 +15,18 @@
   },
   "plugins": [
     "sentence-case"
+  ],
+  "initial-version": "1.0.0",
+  "bootstrap-sha": "95045d34304e52f0364a99dea02bbec7bb0b3bc7",
+  "include-v-in-tag": true,
+  "release-search-depth": 10,
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "chore", "section": "Miscellaneous" },
+    { "type": "refactor", "section": "Code Refactoring" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "ci", "section": "CI/CD" },
+    { "type": "", "section": "Other Changes" }
   ]
 }
