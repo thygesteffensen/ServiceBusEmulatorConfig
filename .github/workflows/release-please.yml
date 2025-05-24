@@ -36,7 +36,12 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
         if: ${{ steps.release.outputs.releases_created }}
-        
+      
+      # Create directory for packages
+      - name: Create Packages Directory
+        if: ${{ steps.release.outputs.releases_created }}
+        run: mkdir -p nuget-packages
+  
       # Build and pack Core project if it was released
       - name: Build and Pack Core
         if: ${{ steps.release.outputs.releases_created && fromJSON(steps.release.outputs.paths_released)['ServiceBusEmulatorConfig.Core'] }}
@@ -57,7 +62,7 @@ jobs:
         run: |
           dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }}
           dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs['ServiceBusEmulatorConfig.Cli--version'] }} --output nuget-packages
-
+        
       # List packages for debugging
       - name: List Packages
         if: ${{ steps.release.outputs.releases_created }}
