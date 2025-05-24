@@ -52,27 +52,53 @@ jobs:
           echo "Major: ${{ steps.release.outputs.major }}"
           echo "Minor: ${{ steps.release.outputs.minor }}"
           echo "Patch: ${{ steps.release.outputs.patch }}"
+          echo "Current branch: ${{ github.ref_name }}"
+          
+      # Set version for packaging based on branch
+      - name: Set package version
+        if: ${{ steps.release.outputs.releases_created }}
+        id: package_version
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          
+          # Make sure we have a valid version
+          if [[ -z "$VERSION" ]]; then
+            echo "No version from release-please, using fallback version"
+            VERSION="0.0.1"
+          fi
+          
+          # For dev branch, ensure it's a prerelease
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            # Check if version already has a prerelease suffix
+            if [[ "$VERSION" != *"-"* ]]; then
+              # If not, add the rc suffix
+              VERSION="${VERSION}-rc.1"
+            fi
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using package version: $VERSION"
           
       # Build and pack Core project
       - name: Build and Pack Core
         if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Core --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version }}
-          dotnet pack ServiceBusEmulatorConfig.Core --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Core --configuration Release --no-restore -p:Version=${{ steps.package_version.outputs.version }}
+          dotnet pack ServiceBusEmulatorConfig.Core --configuration Release --no-build -p:PackageVersion=${{ steps.package_version.outputs.version }} --output nuget-packages
           
       # Build and pack Web project
       - name: Build and Pack Web
         if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Web --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version }}
-          dotnet pack ServiceBusEmulatorConfig.Web --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Web --configuration Release --no-restore -p:Version=${{ steps.package_version.outputs.version }}
+          dotnet pack ServiceBusEmulatorConfig.Web --configuration Release --no-build -p:PackageVersion=${{ steps.package_version.outputs.version }} --output nuget-packages
           
       # Build and pack CLI project
       - name: Build and Pack CLI
         if: ${{ steps.release.outputs.releases_created }}
         run: |
-          dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.release.outputs.version }}
-          dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.release.outputs.version }} --output nuget-packages
+          dotnet build ServiceBusEmulatorConfig.Cli --configuration Release --no-restore -p:Version=${{ steps.package_version.outputs.version }}
+          dotnet pack ServiceBusEmulatorConfig.Cli --configuration Release --no-build -p:PackageVersion=${{ steps.package_version.outputs.version }} --output nuget-packages
         
       # List packages for debugging
       - name: List Packages
