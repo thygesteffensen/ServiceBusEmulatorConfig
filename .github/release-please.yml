@@ -12,6 +12,6 @@ branches:
     releaseType: simple
     prerelease: true
     prereleaseSuffix: rc
-    preTitlePattern: "chore${scope}: release${component} ${version}"
+    preTitlePattern: "chore: release ${version}"
     bumpMinorPreMajor: true
     initialVersion: "1.0.0"
