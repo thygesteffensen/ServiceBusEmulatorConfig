@@ -11,6 +11,7 @@ internal static class Program
             
         // Add transform command
         rootCommand.AddCommand(new TransformCommand());
+        rootCommand.AddCommand(new WebCommand());
 
         // Set description for the root command
         rootCommand.Description = "Tool to transform Azure Service Bus ARM templates to emulator configuration format";

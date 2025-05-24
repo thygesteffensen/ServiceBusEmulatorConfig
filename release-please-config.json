@@ -1,0 +1,19 @@
+{
+  "packages": {
+    "ServiceBusEmulatorConfig.Core": {
+      "package-name": "ServiceBusEmulatorConfig.Core",
+      "release-type": "simple"
+    },
+    "ServiceBusEmulatorConfig.Web": {
+      "package-name": "ServiceBusEmulatorConfig.Web",
+      "release-type": "simple"
+    },
+    "ServiceBusEmulatorConfig.Cli": {
+      "package-name": "ServiceBusEmulatorConfig.Cli",
+      "release-type": "simple" 
+    }
+  },
+  "plugins": [
+    "sentence-case"
+  ]
+}

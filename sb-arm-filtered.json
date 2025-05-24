@@ -1,0 +1,1851 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namespaces_sb_klesb_dev_name": {
+      "defaultValue": "sb-klesb-dev",
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "maxMessageSizeInKilobytes": 256,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "maxSizeInMegabytes": 5120,
+        "requiresDuplicateDetection": false,
+        "duplicateDetectionHistoryTimeWindow": "PT10M",
+        "enableBatchedOperations": true,
+        "status": "Active",
+        "supportOrdering": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "enablePartitioning": false,
+        "enableExpress": false
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Broker')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "Broker"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Continuation')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "ECEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/ecendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/fieldserviceendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'fieldserviceendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": true,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardDeadLetteredMessagesTo": "Resolver"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/fsadendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'fsadendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/manager/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'manager')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mithrendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/tracetoolendpoint/FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'tracetoolendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Heartbeat')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "Heartbeat"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MascotStoreEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "MascotStoreEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "MitIndkoebEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Resolver')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "Resolver"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Retry')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "FOEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "isClientAffine": false,
+        "lockDuration": "PT1M",
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "deadLetteringOnFilterEvaluationExceptions": true,
+        "maxDeliveryCount": 10,
+        "status": "Active",
+        "enableBatchedOperations": true,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "forwardTo": "TracetoolEndpoint"
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint/ClosedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'ECEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'ECEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ClosedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MascotStoreEndpoint/ClosedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MascotStoreEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MascotStoreEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ClosedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ClosedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ClosedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/ClosedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ClosedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ClosedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ClosedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Continuation/continuation')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Continuation')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Continuation'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Continuation'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/ECEmployeeHired')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeHired'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/ecendpoint/FOEndpoint/ECEmployeeHired')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'ECEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeHired'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/ECEmployeeModified')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeModified'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/ecendpoint/FOEndpoint/ECEmployeeModified')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'ECEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeModified'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/ECEmployeeStopped')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeStopped'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/ecendpoint/FOEndpoint/ECEmployeeStopped')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'ecendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'ECEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ECEmployeeStopped'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Broker/from-FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid()",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Broker'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Resolver/from-FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Resolver')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Resolver'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Heartbeat/heartbeat')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Heartbeat')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Heartbeat'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/HREmployeeHired')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeHired'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mithrendpoint/FOEndpoint/HREmployeeHired')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitHrEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeHired'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/HREmployeeModified')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeModified'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mithrendpoint/FOEndpoint/HREmployeeModified')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitHrEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeModified'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/HREmployeeRequest')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeRequest'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/fieldserviceendpoint/FOEndpoint/HREmployeeRequest')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'fieldserviceendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'fieldserviceendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FieldServiceEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeRequest'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/fsadendpoint/FOEndpoint/HREmployeeRequest')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'fsadendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'fsadendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FSADEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeRequest'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/HREmployeeRequest')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeRequest'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/HREmployeeStopped')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeStopped'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mithrendpoint/FOEndpoint/HREmployeeStopped')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mithrendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitHrEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'HREmployeeStopped'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/MaterialRent')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'MaterialRent'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/tracetoolendpoint/FOEndpoint/MaterialRent')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'tracetoolendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'tracetoolendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'TracetoolEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'MaterialRent'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint/ModifiedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'ECEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'ECEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MascotStoreEndpoint/ModifiedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MascotStoreEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MascotStoreEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ModifiedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/ModifiedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ModifiedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/ModifiedPurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedPurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/ModifiedPurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ModifiedPurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint/NewFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'ECEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'ECEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MascotStoreEndpoint/NewFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MascotStoreEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MascotStoreEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/NewFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/NewOpenProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewOpenProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/NewOpenProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewOpenProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/NewPurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewPurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/NewPurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewPurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/NewPurchaseOrderId')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewPurchaseOrderId'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/NewPurchaseOrderId')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewPurchaseOrderId'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/NewPurchaseOrderNumber')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NewPurchaseOrderNumber'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/NumberOfToolsUpdatedOnProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NumberOfToolsUpdatedOnProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/tracetoolendpoint/FOEndpoint/NumberOfToolsUpdatedOnProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'tracetoolendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'tracetoolendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'TracetoolEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'NumberOfToolsUpdatedOnProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint/PayrollDisbursement')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'ECEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'ECEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PayrollDisbursement'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/Project')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Project'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/PurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/PurchaseOrder')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PurchaseOrder'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/PurchaseOrderApproveStatus')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PurchaseOrderApproveStatus'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/PurchaseOrderStatus')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PurchaseOrderStatus'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/PurchaseOrderStatus')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'PurchaseOrderStatus'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/ECEndpoint/ReopenedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'ECEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'ECEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ReopenedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MascotStoreEndpoint/ReopenedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MascotStoreEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MascotStoreEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ReopenedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ReopenedFoCostCentre')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ReopenedFoCostCentre'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/MitIndkoebEndpoint/ReopenedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'MitIndkoebEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'MitIndkoebEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ReopenedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/TracetoolEndpoint/ReopenedProject')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'TracetoolEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'FOEndpoint'; SET user.EventId = newid(); SET user.To = 'TracetoolEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'ReopenedProject'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/broker/FOEndpoint/RequestPurchaseOrderId')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'broker', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'broker')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Broker'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'RequestPurchaseOrderId'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/mitindkoebendpoint/FOEndpoint/RequestPurchaseOrderId')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'mitindkoebendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'MitIndkoebEndpoint'; SET user.EventId = newid(); SET user.To = 'FOEndpoint';",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'RequestPurchaseOrderId'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Retry/retry')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Retry')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.To = 'FOEndpoint'; SET user.From = 'Retry'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'Retry'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/FOEndpoint/to-FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {},
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'FOEndpoint'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/foendpoint/Resolver/to-FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint', 'Resolver')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'foendpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {},
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'FOEndpoint'",
+          "compatibilityLevel": 20
+        }
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+      "apiVersion": "2024-01-01",
+      "name": "[concat(parameters('namespaces_sb_klesb_dev_name'), '/manager/FOEndpoint/to-FOEndpoint')]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_klesb_dev_name'), 'manager', 'FOEndpoint')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_klesb_dev_name'), 'manager')]",
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_klesb_dev_name'))]"
+      ],
+      "properties": {
+        "action": {
+          "sqlExpression": "SET user.From = 'Manager'",
+          "compatibilityLevel": 20
+        },
+        "filterType": "SqlFilter",
+        "sqlFilter": {
+          "sqlExpression": "user.To = 'FOEndpoint'",
+          "compatibilityLevel": 20
+        }
+      }
+    }
+  ]
+}
