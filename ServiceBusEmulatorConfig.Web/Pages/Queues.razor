@@ -30,7 +30,7 @@
                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
                                  Class="mb-3"></MudTextField>
                     
-                    <MudList T="Queue" Clickable="true" Dense="true" DisableGutters="true">
+                    <MudList T="Queue" clickable="true" Dense="true" disableGutters="true">
                         @foreach (var queue in _pageState.Queues.Where(FilterFunc))
                         {
                             <MudListItem T="Queue" 
