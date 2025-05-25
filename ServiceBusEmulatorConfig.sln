@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Web", "ServiceBusEmulatorConfig.Web\ServiceBusEmulatorConfig.Web.csproj", "{C1F36325-1A88-4EB2-8869-78AAA7306CF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusEmulatorConfig.Test", "ServiceBusEmulatorConfig.Test\ServiceBusEmulatorConfig.Test.csproj", "{13C651DE-5334-47F4-9173-5E40C2261837}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Release|x64.Build.0 = Release|Any CPU
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1F36325-1A88-4EB2-8869-78AAA7306CF6}.Release|x86.Build.0 = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|x64.Build.0 = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Debug|x86.Build.0 = Debug|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|x64.ActiveCfg = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|x64.Build.0 = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|x86.ActiveCfg = Release|Any CPU
+		{13C651DE-5334-47F4-9173-5E40C2261837}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
