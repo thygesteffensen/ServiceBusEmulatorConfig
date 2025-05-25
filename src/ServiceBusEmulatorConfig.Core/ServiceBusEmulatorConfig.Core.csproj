@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
     <IsPackable>true</IsPackable>
-    <PackageId>ServiceBusEmulatorConfig.Core</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <PackageId>ServiceBusEmulatorConfig.Core</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

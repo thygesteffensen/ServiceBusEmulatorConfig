@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <PackageDescription>CLI tool for Azure Service Bus Emulator Configuration</PackageDescription>
+        <PackageTags>$(PackageTags);cli</PackageTags>
+
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
 
         <!-- .NET Tool specific properties -->
         <PackAsTool>true</PackAsTool>
@@ -15,9 +15,6 @@
 
         <!-- NuGet package metadata -->
         <PackageId>ServiceBusEmulatorConfig.Cli</PackageId>
-        <Authors>Thyge Skødt Steffensen</Authors>
-        <Description>Azure Service Bus Emulator Configuration Tool</Description>
-        <PackageTags>azure;servicebus;emulator;configuration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,11 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj"/>
+        <ProjectReference
+            Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj" />
     </ItemGroup>
 
 </Project>
