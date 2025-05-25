@@ -23,7 +23,7 @@
         <MudGrid>
             <!-- Left Pane - TreeView -->
             <MudItem xs="12" sm="4" md="3">
-                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 100%; overflow: auto;">
                     <MudText Typo="Typo.h6" Class="mb-2">Topic Explorer</MudText>
                     <MudTreeView T="Identifier" SelectionMode="SelectionMode.SingleSelection"
                         SelectedValueChanged="OnSelectedValueChanged!">
@@ -44,7 +44,7 @@
             
             <!-- Right Pane - Details -->
             <MudItem xs="12" sm="8" md="9">
-                <MudPaper Class="pa-4" Elevation="2" Style="height: 600px; overflow: auto;">
+                <MudPaper Class="pa-4" Elevation="2" Style="height: 100%; overflow: auto;">
                     @if (_selectedNodeId == null)
                     {
                         <MudAlert Severity="Severity.Info">Select a topic or subscription from the tree to view details.</MudAlert>
