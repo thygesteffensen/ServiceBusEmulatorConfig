@@ -1,0 +1,122 @@
+@if (Queue == null)
+{
+    <MudText>No queue selected</MudText>
+}
+else
+{
+    <MudStack>
+        <MudText Typo="Typo.h5" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.Queue" Class="mr-2"/> @Queue.Name
+        </MudText>
+
+        <MudDivider/>
+
+        <MudText Typo="Typo.h6">Properties</MudText>
+
+        <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+            <tbody>
+            <tr>
+                <td><strong>Name</strong></td>
+                <td>@Queue.Name</td>
+            </tr>
+            <tr>
+                <td><strong>Max Delivery Count</strong></td>
+                <td>@Queue.Properties.MaxDeliveryCount</td>
+            </tr>
+            <tr>
+                <td><strong>Requires Session</strong></td>
+                <td>@(Queue.Properties.RequiresSession ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Dead Lettering on Message Expiration</strong></td>
+                <td>@(Queue.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Default Message TTL</strong></td>
+                <td>@Queue.Properties.DefaultMessageTimeToLive</td>
+            </tr>
+            <tr>
+                <td><strong>Lock Duration</strong></td>
+                <td>@Queue.Properties.LockDuration</td>
+            </tr>
+            <tr>
+                <td><strong>Forward To</strong></td>
+                <td>@(string.IsNullOrEmpty(Queue.Properties.ForwardTo) ? "-" : Queue.Properties.ForwardTo)</td>
+            </tr>
+            <tr>
+                <td><strong>Forward Dead Lettered Messages To</strong></td>
+                <td>@(string.IsNullOrEmpty(Queue.Properties.ForwardDeadLetteredMessagesTo) ? "-" : Queue.Properties.ForwardDeadLetteredMessagesTo)</td>
+            </tr>
+            <tr>
+                <td><strong>Requires Duplicate Detection</strong></td>
+                <td>@(Queue.Properties.RequiresDuplicateDetection ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Duplicate Detection Window</strong></td>
+                <td>@Queue.Properties.DuplicateDetectionHistoryTimeWindow</td>
+            </tr>
+            <tr>
+                <td><strong>Max Size in Megabytes</strong></td>
+                <td>@Queue.Properties.MaxSizeInMegabytes</td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td>@Queue.Properties.Status</td>
+            </tr>
+            <tr>
+                <td><strong>Auto Delete On Idle</strong></td>
+                <td>@Queue.Properties.AutoDeleteOnIdle</td>
+            </tr>
+            <tr>
+                <td><strong>Enable Batched Operations</strong></td>
+                <td>@(Queue.Properties.EnableBatchedOperations ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Enable Partitioning</strong></td>
+                <td>@(Queue.Properties.EnablePartitioning ? "Yes" : "No")</td>
+            </tr>
+            </tbody>
+        </MudSimpleTable>
+
+        <MudDivider Class="my-3"/>
+
+        <MudText Typo="Typo.h6">Runtime Properties</MudText>
+
+        <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+            <tbody>
+            <tr>
+                <td><strong>Size in Bytes</strong></td>
+                <td>@Queue.RuntimeProperties.SizeInBytes</td>
+            </tr>
+            <tr>
+                <td><strong>Created At</strong></td>
+                <td>@Queue.RuntimeProperties.CreatedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Updated At</strong></td>
+                <td>@Queue.RuntimeProperties.UpdatedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Accessed At</strong></td>
+                <td>@Queue.RuntimeProperties.AccessedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Message Count</strong></td>
+                <td>@Queue.RuntimeProperties.ActiveMessageCount</td>
+            </tr>
+            <tr>
+                <td><strong>Dead Letter Message Count</strong></td>
+                <td>@Queue.RuntimeProperties.DeadLetterMessageCount</td>
+            </tr>
+            <tr>
+                <td><strong>Scheduled Message Count</strong></td>
+                <td>@Queue.RuntimeProperties.ScheduledMessageCount</td>
+            </tr>
+            </tbody>
+        </MudSimpleTable>
+    </MudStack>
+}
+
+@code {
+    [Parameter] public Queue? Queue { get; set; }
+}

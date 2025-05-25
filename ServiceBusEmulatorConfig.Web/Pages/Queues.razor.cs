@@ -16,7 +16,6 @@ public partial class Queues(
 
     private Queue? _selectedQueue;
     private string _searchString = "";
-    private bool _queueDetailsDialogVisible;
 
     private bool FilterFunc(Queue queue)
     {
@@ -26,14 +25,8 @@ public partial class Queues(
         return queue.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
     }
 
-    private void ShowQueueDetails(Queue queue)
+    private void SelectQueue(Queue queue)
     {
         _selectedQueue = queue;
-        _queueDetailsDialogVisible = true;
-    }
-
-    private void CloseQueueDetailsDialog()
-    {
-        _queueDetailsDialogVisible = false;
     }
 }
