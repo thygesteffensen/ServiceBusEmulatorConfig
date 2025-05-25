@@ -16,6 +16,10 @@ else
         <MudSimpleTable Hover="true" Dense="true" Bordered="true">
             <tbody>
             <tr>
+                <td><strong>Name</strong></td>
+                <td>@Topic.Name</td>
+            </tr>
+            <tr>
                 <td><strong>Requires Duplicate Detection</strong></td>
                 <td>@(Topic.Properties.RequiresDuplicateDetection ? "Yes" : "No")</td>
             </tr>
@@ -26,6 +30,59 @@ else
             <tr>
                 <td><strong>Duplicate Detection Window</strong></td>
                 <td>@Topic.Properties.DuplicateDetectionHistoryTimeWindow</td>
+            </tr>
+            <tr>
+                <td><strong>Max Size in Megabytes</strong></td>
+                <td>@Topic.Properties.MaxSizeInMegabytes</td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td>@Topic.Properties.Status</td>
+            </tr>
+            <tr>
+                <td><strong>Supports Ordering</strong></td>
+                <td>@(Topic.Properties.SupportOrdering ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Auto Delete On Idle</strong></td>
+                <td>@Topic.Properties.AutoDeleteOnIdle</td>
+            </tr>
+            <tr>
+                <td><strong>Enable Batched Operations</strong></td>
+                <td>@(Topic.Properties.EnableBatchedOperations ? "Yes" : "No")</td>
+            </tr>
+            <tr>
+                <td><strong>Enable Partitioning</strong></td>
+                <td>@(Topic.Properties.EnablePartitioning ? "Yes" : "No")</td>
+            </tr>
+            </tbody>
+        </MudSimpleTable>
+
+        <MudDivider Class="my-3"/>
+
+        <MudText Typo="Typo.h6">Runtime Properties</MudText>
+
+        <MudSimpleTable Hover="true" Dense="true" Bordered="true">
+            <tbody>
+            <tr>
+                <td><strong>Size in Bytes</strong></td>
+                <td>@Topic.RuntimeProperties.SizeInBytes</td>
+            </tr>
+            <tr>
+                <td><strong>Created At</strong></td>
+                <td>@Topic.RuntimeProperties.CreatedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Updated At</strong></td>
+                <td>@Topic.RuntimeProperties.UpdatedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Accessed At</strong></td>
+                <td>@Topic.RuntimeProperties.AccessedAt</td>
+            </tr>
+            <tr>
+                <td><strong>Subscription Count</strong></td>
+                <td>@Topic.RuntimeProperties.SubscriptionCount</td>
             </tr>
             </tbody>
         </MudSimpleTable>
@@ -59,9 +116,24 @@ else
                             @(context.Item.Properties.DeadLetteringOnMessageExpiration ? "Yes" : "No")
                         </CellTemplate>
                     </TemplateColumn>
+                    <TemplateColumn Title="Default Message TTL">
+                        <CellTemplate>
+                            @context.Item.Properties.DefaultMessageTimeToLive
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Max Delivery Count">
+                        <CellTemplate>
+                            @context.Item.Properties.MaxDeliveryCount
+                        </CellTemplate>
+                    </TemplateColumn>
                     <TemplateColumn Title="Message Count">
                         <CellTemplate>
                             @context.Item.RuntimeProperties.ActiveMessageCount
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Rules">
+                        <CellTemplate>
+                            @context.Item.Rules.Count
                         </CellTemplate>
                     </TemplateColumn>
                 </Columns>
@@ -72,4 +144,5 @@ else
 
 @code {
     [Parameter] public Topic? Topic { get; set; }
+    [Parameter] public EventCallback<Subscription> OnSelectSubscription { get; set; }
 }
