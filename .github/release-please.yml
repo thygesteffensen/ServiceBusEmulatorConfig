@@ -7,13 +7,13 @@ branches:
     releaseType: simple
     prerelease: false
     bumpMinorPreMajor: true
-    initialVersion: "1.0.0"
+    initialVersion: "1.2.0"
   dev:
     releaseType: simple
     prerelease: true
     prereleaseSuffix: rc
     preTitlePattern: "chore: release ${version}"
     bumpMinorPreMajor: true
-    initialVersion: "1.0.0"
+    initialVersion: "1.2.0"
     handleGHRelease: true
     draft: true
