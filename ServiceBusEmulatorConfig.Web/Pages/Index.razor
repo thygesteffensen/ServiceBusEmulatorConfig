@@ -1,6 +1,5 @@
 ﻿@page "/"
-@using ServiceBusEmulatorConfig.Core.Models.ServiceBus
-@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+@inject IApplicationState ApplicationState;
 
 <PageTitle>Dashboard - Service Bus Explorer</PageTitle>
 
@@ -12,13 +11,13 @@
         </MudText>
     </MudPaper>
 
-    @if (ConnectionService.IsConnected)
+    @if (ApplicationState.IsConnected)
     {
         <MudGrid>
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-4" Elevation="3">
                     <MudText Typo="Typo.h5" Class="mb-4">Namespace</MudText>
-                    <MudText Typo="Typo.body1">@_namespace?.Name</MudText>
+                    <MudText Typo="Typo.body1">@ApplicationState.NamespaceProperties.Name</MudText>
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -30,14 +29,14 @@
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-4 d-flex flex-column" Elevation="3" Style="height: 150px;">
                     <MudText Typo="Typo.h5">Queues</MudText>
-                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@(_queues?.Count ?? 0)</MudText>
+                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@ApplicationState.QueuePageState.Queues.Count</MudText>
                     <MudButton Href="queues" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">View Queues</MudButton>
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-4 d-flex flex-column" Elevation="3" Style="height: 150px;">
                     <MudText Typo="Typo.h5">Topics</MudText>
-                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@(_topics?.Count ?? 0)</MudText>
+                    <MudText Typo="Typo.h3" Class="flex-grow-1 d-flex align-center justify-center">@ApplicationState.TopicPageState.Topics.Count</MudText>
                     <MudButton Href="topics" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">View Topics</MudButton>
                 </MudPaper>
             </MudItem>
@@ -67,31 +66,3 @@
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="connection">Connect Now</MudButton>
     }
 </MudContainer>
-
-@code {
-    private ServiceBusNamespace? _namespace;
-    private List<ServiceBusQueue>? _queues;
-    private List<ServiceBusTopic>? _topics;
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (ConnectionService.IsConnected)
-        {
-            await LoadData();
-        }
-    }
-
-    private async Task LoadData()
-    {
-        try
-        {
-            _namespace = await ConnectionService.GetNamespaceDetailsAsync();
-            _queues = await ConnectionService.GetQueuesAsync();
-            _topics = await ConnectionService.GetTopicsAsync();
-        }
-        catch (Exception)
-        {
-            // Handle error
-        }
-    }
-}

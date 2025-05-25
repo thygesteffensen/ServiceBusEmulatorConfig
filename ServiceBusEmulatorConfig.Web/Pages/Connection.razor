@@ -1,5 +1,8 @@
 @page "/connection"
-@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
+
+@using ServiceBusEmulatorConfig.Web.State
+
+@inject IApplicationState ApplicationState
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 
@@ -8,30 +11,31 @@
 <MudContainer MaxWidth="MaxWidth.Medium">
     <MudPaper Class="pa-4 my-4">
         <MudText Typo="Typo.h4" Class="mb-4">Connect to Azure Service Bus</MudText>
-        
+
         <MudForm @ref="_form" @bind-IsValid="@_formIsValid">
-            <MudTextField T="string" Label="Connection String" 
-                          @bind-Value="_connectionString" 
+            <MudTextField T="string" Label="Connection String"
+                          @bind-Value="_connectionString"
                           Required="true"
                           Variant="Variant.Outlined"
-                          RequiredError="Connection string is required" 
-                          Adornment="Adornment.End" 
+                          RequiredError="Connection string is required"
+                          Adornment="Adornment.End"
                           AdornmentIcon="@Icons.Material.Filled.Key"
-                          FullWidth="true" />
-            
+                          FullWidth="true"/>
+
             <div class="d-flex justify-space-between mt-6">
-                <MudButton Variant="Variant.Outlined" 
-                         Color="Color.Secondary" 
-                         Disabled="@_isBusy" 
-                         OnClick="@ClearForm">Clear</MudButton>
-                         
-                <MudButton Variant="Variant.Filled" 
-                         Color="Color.Primary" 
-                         Disabled="@(!_formIsValid || _isBusy)" 
-                         OnClick="@ConnectAsync">
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Secondary"
+                           Disabled="@_isBusy"
+                           OnClick="@ClearForm">Clear
+                </MudButton>
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Disabled="@(!_formIsValid || _isBusy)"
+                           OnClick="@ConnectAsync">
                     @if (_isBusy)
                     {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                         <MudText Class="ms-2">Connecting</MudText>
                     }
                     else
@@ -42,11 +46,11 @@
             </div>
         </MudForm>
     </MudPaper>
-    
-    @if (ConnectionService.IsConnected)
+
+    @if (ApplicationState.IsConnected)
     {
         <MudAlert Severity="Severity.Success" Class="mt-4">
-            Currently connected to: @_connectedNamespace
+            Currently connected to: @ApplicationState.NamespaceProperties.Name
         </MudAlert>
     }
 
@@ -73,22 +77,21 @@
 
 @code {
     private string _connectionString = "";
-    private string _connectedNamespace = "";
-    private bool _formIsValid = false;
-    private bool _isBusy = false;
+    private bool _formIsValid;
+    private bool _isBusy;
     private MudForm _form = null!;
 
     protected override void OnInitialized()
     {
-        if (ConnectionService.IsConnected)
+        if (ApplicationState.IsConnected)
         {
-            _connectionString = ConnectionService.ConnectionString;
+            _connectionString = ApplicationState.ConnectionString;
         }
     }
 
     private void ClearForm()
     {
-        _connectionString = "";
+        ApplicationState.Disconnect();
         _form.ResetAsync();
     }
 
@@ -97,11 +100,8 @@
         try
         {
             _isBusy = true;
-            await ConnectionService.ConnectAsync(_connectionString);
-            
-            var namespaceDetails = await ConnectionService.GetNamespaceDetailsAsync();
-            _connectedNamespace = namespaceDetails.Name;
-            
+            await ApplicationState.Connect(_connectionString);
+
             Snackbar.Add("Successfully connected to Service Bus", Severity.Success);
             NavigationManager.NavigateTo("/");
         }
@@ -114,4 +114,5 @@
             _isBusy = false;
         }
     }
+
 }

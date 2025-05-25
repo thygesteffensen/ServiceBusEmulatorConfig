@@ -19,5 +19,23 @@ public record ArmResource(
     string Name,
     string Location,
     List<string> DependsOn,
-    Dictionary<string, object> Properties
+    ArmResourceProperties Properties
+);
+
+public record ArmResourceProperties(
+    string LockDuration = "PT5M",
+    int MaxDeliveryCount = 10,
+    string? ForwardDeadLetteredMessagesTo = null,
+    string? ForwardTo = null,
+    bool RequiresSession = false,
+    bool DeadLetteringOnMessageExpiration = false,
+    bool RequiresDuplicateDetection = false,
+    string? FilterType = null,
+    SqlFilter? SqlFilter = null,
+    SqlFilter? Action = null
+);
+
+public record SqlFilter(
+    string SqlExpression,
+    int CompatabilityLevel = 20
 );

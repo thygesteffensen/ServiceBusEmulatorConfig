@@ -1,7 +1,7 @@
 @page "/export"
-@inject ServiceBusEmulatorConfig.Web.Services.ServiceBusConnectionService ConnectionService
 @inject ISnackbar Snackbar
 @inject IJSRuntime JsRuntime
+@inject IApplicationState ApplicationState
 
 <PageTitle>Export Config - Service Bus Explorer</PageTitle>
 
@@ -9,7 +9,7 @@
     <MudPaper Class="pa-4 my-4">
         <MudText Typo="Typo.h4" Class="mb-4">Export Service Bus Configuration</MudText>
 
-        @if (!ConnectionService.IsConnected)
+        @if (!ApplicationState.IsConnected)
         {
             <MudAlert Severity="Severity.Warning" Class="mb-4">
                 Not connected to any Service Bus namespace. Please <MudLink Href="connection">connect first</MudLink>.
@@ -73,11 +73,11 @@
         try
         {
             _exporting = true;
-            var config = await ConnectionService.ExportConfigAsync();
-            _exportedConfig = System.Text.Json.JsonSerializer.Serialize(config, new System.Text.Json.JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+            // var config = await ConnectionService.ExportConfigAsync();
+            // _exportedConfig = System.Text.Json.JsonSerializer.Serialize(config, new System.Text.Json.JsonSerializerOptions
+            // {
+            //     WriteIndented = true
+            // });
             Snackbar.Add("Configuration exported successfully", Severity.Success);
         }
         catch (Exception ex)
