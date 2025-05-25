@@ -32,11 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz1\ServiceBusEmulatorConfig.Blaz1.csproj" />-->
-        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz2\ServiceBusEmulatorConfig.Blaz2.csproj" />-->
-        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Blaz\ServiceBusEmulatorConfig.Blaz.csproj" />-->
         <ProjectReference Include="..\ServiceBusEmulatorConfig.Core\ServiceBusEmulatorConfig.Core.csproj"/>
-        <!--    <ProjectReference Include="..\ServiceBusEmulatorConfig.Web\ServiceBusEmulatorConfig.Web.csproj" />-->
     </ItemGroup>
 
 </Project>

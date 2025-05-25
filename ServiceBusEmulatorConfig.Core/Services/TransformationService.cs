@@ -42,19 +42,16 @@ public class TransformationService : ITransformationService
 
         // Create the emulator config structure
         var emulatorConfig = new EmulatorConfig
-        {
-            UserConfig = new UserConfig
-            {
-                Namespaces =
+        (
+            UserConfig: new UserConfig
+            (
+                Namespaces:
                 [
-                    new Namespace
-                    {
-                        Name = namespaceName
-                    }
+                    new Namespace(Name: namespaceName, [], [])
                 ],
-                Logging = new Logging { Type = "File" }
-            }
-        };
+                Logging: new Logging(Type: "File")
+            )
+        );
 
         var serviceBusNamespace = emulatorConfig.UserConfig.Namespaces[0];
 
@@ -85,11 +82,11 @@ public class TransformationService : ITransformationService
             Console.WriteLine($"Processing topic: {topicName} (original name: {topicResource.Name})");
 
             var topic = new Topic
-            {
-                Name = topicName,
-                Properties = MapTopicProperties(topicResource.Properties),
-                Subscriptions = []
-            };
+            (
+                Name: topicName,
+                Properties: MapTopicProperties(topicResource.Properties),
+                Subscriptions: []
+            );
 
             serviceBusNamespace.Topics.Add(topic);
         }
@@ -124,25 +121,26 @@ public class TransformationService : ITransformationService
                 // Create the topic if it doesn't exist
                 Console.WriteLine($"  Creating missing topic {topicName} for subscription {subscriptionName}");
                 topic = new Topic
-                {
-                    Name = topicName,
-                    Properties = new TopicProperties
-                    {
-                        DefaultMessageTimeToLive = "PT5M",
-                        DuplicateDetectionHistoryTimeWindow = "PT5M",
-                        RequiresDuplicateDetection = false
-                    },
-                    Subscriptions = []
-                };
+                (
+                    Name: topicName,
+                    Properties: new TopicProperties
+                    (
+                        DefaultMessageTimeToLive: "PT5M",
+                        DuplicateDetectionHistoryTimeWindow: "PT5M",
+                        RequiresDuplicateDetection: false,
+                        DeadLetteringOnMessageExpiration: "PT5M"
+                    ),
+                    Subscriptions: []
+                );
                 serviceBusNamespace.Topics.Add(topic);
             }
 
             var subscription = new Subscription
-            {
-                Name = subscriptionName,
-                Properties = MapSubscriptionProperties(subscriptionResource.Properties),
-                Rules = []
-            };
+            (
+                Name: subscriptionName,
+                Properties: MapSubscriptionProperties(subscriptionResource.Properties),
+                Rules: []
+            );
 
             topic.Subscriptions.Add(subscription);
         }
@@ -185,10 +183,10 @@ public class TransformationService : ITransformationService
             try
             {
                 var rule = new Rule
-                {
-                    Name = ruleName,
-                    Properties = MapRuleProperties(ruleResource.Properties)
-                };
+                (
+                    Name: ruleName,
+                    Properties: MapRuleProperties(ruleResource.Properties)
+                );
 
                 subscription.Rules.Add(rule);
                 Console.WriteLine($"Added rule {ruleName} to subscription {subscriptionName} in topic {topicName}");
@@ -217,175 +215,38 @@ public class TransformationService : ITransformationService
         return index < parts.Length ? parts[index] : string.Empty;
     }
 
-    private TopicProperties MapTopicProperties(Dictionary<string, object>? armProperties)
+    private TopicProperties MapTopicProperties(ArmResourceProperties armProperties)
     {
-        var properties = new TopicProperties();
-
-        if (armProperties == null)
-        {
-            return properties;
-        }
-
-        properties.DefaultMessageTimeToLive = "PT5M"; // The supported version by the emulator
-        properties.DuplicateDetectionHistoryTimeWindow = "PT5M"; // The supported version by the emulator
-
-        if (!armProperties.TryGetValue("requiresDuplicateDetection", out var reqDupDetection)) return properties;
-
-        if (reqDupDetection is JsonElement jsonElement)
-        {
-            properties.RequiresDuplicateDetection = jsonElement.ValueKind == JsonValueKind.True;
-        }
-        else
-        {
-            properties.RequiresDuplicateDetection = Convert.ToBoolean(reqDupDetection);
-        }
+        var properties = new TopicProperties(
+            RequiresDuplicateDetection: armProperties.RequiresDuplicateDetection
+        );
 
         return properties;
     }
 
-    private SubscriptionProperties MapSubscriptionProperties(Dictionary<string, object>? armProperties)
+    private SubscriptionProperties MapSubscriptionProperties(ArmResourceProperties armProperties)
     {
-        var properties = new SubscriptionProperties();
-
-        if (armProperties == null)
-            return properties;
-
-        if (armProperties.TryGetValue("deadLetteringOnMessageExpiration", out var deadLettering))
-        {
-            if (deadLettering is JsonElement jsonElement)
-            {
-                properties.DeadLetteringOnMessageExpiration = jsonElement.ValueKind == JsonValueKind.True;
-            }
-            else
-            {
-                properties.DeadLetteringOnMessageExpiration = Convert.ToBoolean(deadLettering);
-            }
-        }
-        properties.DefaultMessageTimeToLive = "PT5M"; // Supported version by the emulator //defaultTtl?.ToString() ?? "PT1H";
-
-        properties.LockDuration = armProperties.TryGetValue("lockDuration", out var lockDuration)
-            ? lockDuration.ToString() ?? "PT1M"
-            : "PT1M"; // Default 1 minute
-
-        if (armProperties.TryGetValue("maxDeliveryCount", out var maxDelivery))
-        {
-            if (maxDelivery is JsonElement jsonElement)
-            {
-                if (jsonElement.ValueKind == JsonValueKind.Number)
-                {
-                    properties.MaxDeliveryCount = jsonElement.GetInt32();
-                }
-            }
-            else
-            {
-                properties.MaxDeliveryCount = Convert.ToInt32(maxDelivery);
-            }
-        }
-        else
-        {
-            properties.MaxDeliveryCount = 10; // Default
-        }
-
-        if (armProperties.TryGetValue("forwardDeadLetteredMessagesTo", out var forwardDlq))
-        {
-            properties.ForwardDeadLetteredMessagesTo = forwardDlq.ToString() ?? "";
-        }
-        else
-        {
-            properties.ForwardDeadLetteredMessagesTo = "";
-        }
-
-        if (armProperties.TryGetValue("forwardTo", out var forwardTo))
-        {
-            properties.ForwardTo = forwardTo.ToString() ?? "";
-        }
-        else
-        {
-            properties.ForwardTo = "";
-        }
-
-        if (armProperties.TryGetValue("requiresSession", out var reqSession))
-        {
-            if (reqSession is JsonElement jsonElement)
-            {
-                properties.RequiresSession = jsonElement.ValueKind == JsonValueKind.True;
-            }
-            else
-            {
-                properties.RequiresSession = Convert.ToBoolean(reqSession);
-            }
-        }
+        var properties = new SubscriptionProperties(
+            LockDuration: armProperties.LockDuration,
+            MaxDeliveryCount: armProperties.MaxDeliveryCount,
+            ForwardDeadLetteredMessagesTo: armProperties.ForwardDeadLetteredMessagesTo ?? "",
+            ForwardTo: armProperties.ForwardTo ?? "",
+            RequiresSession: armProperties.RequiresSession,
+            DeadLetteringOnMessageExpiration: armProperties.DeadLetteringOnMessageExpiration
+        );
 
         return properties;
     }
 
-    private RuleProperties MapRuleProperties(Dictionary<string, object>? armProperties)
+    private RuleProperties MapRuleProperties(ArmResourceProperties armProperties)
     {
-        var properties = new RuleProperties();
-
-        if (armProperties == null)
-        {
-            return properties;
-        }
-
-        // Default to Sql Filter type
-        properties.FilterType = "Sql";
-
-        if (armProperties.TryGetValue("filterType", out var filterType))
-        {
-            if (filterType is string fType && fType.Equals("CorrelationFilter", StringComparison.OrdinalIgnoreCase))
-            {
-                properties.FilterType = "Correlation";
-            }
-        }
-
-        // Handle SQL filter
-        try
-        {
-            if (armProperties.TryGetValue("sqlFilter", out var sqlFilterObj))
-            {
-                properties.SqlFilter = new SqlFilter();
-
-                if (sqlFilterObj is JsonElement sqlFilter && sqlFilter.TryGetProperty("sqlExpression", out var sqlExpr))
-                {
-                    properties.SqlFilter.SqlExpression = sqlExpr.GetString() ?? "";
-                }
-                else if (sqlFilterObj is Dictionary<string, object> sqlFilterDict &&
-                         sqlFilterDict.TryGetValue("sqlExpression", out var sqlExprObj))
-                {
-                    properties.SqlFilter.SqlExpression = sqlExprObj.ToString() ?? "";
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error processing SQL filter: {ex.Message}");
-            properties.SqlFilter = new SqlFilter { SqlExpression = "" };
-        }
-
-        // Handle action
-        try
-        {
-            if (armProperties.TryGetValue("action", out var actionObj))
-            {
-                properties.Action = new SqlAction();
-
-                if (actionObj is JsonElement action && action.TryGetProperty("sqlExpression", out var actionExpr))
-                {
-                    properties.Action.SqlExpression = actionExpr.GetString() ?? "";
-                }
-                else if (actionObj is Dictionary<string, object> actionDict &&
-                         actionDict.TryGetValue("sqlExpression", out var actionExprObj))
-                {
-                    properties.Action.SqlExpression = actionExprObj.ToString() ?? "";
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error processing action: {ex.Message}");
-            properties.Action = new SqlAction { SqlExpression = "" };
-        }
+        var properties = new RuleProperties(
+            FilterType:
+            armProperties.FilterType?.Equals("CorrelationFilter", StringComparison.OrdinalIgnoreCase) ?? false
+                ? "Correlation"
+                : "Sql",
+            SqlFilter: new Models.Emulator.SqlFilter(armProperties.SqlFilter!.SqlExpression),
+            Action: new SqlAction(armProperties.Action!.SqlExpression));
 
         return properties;
     }

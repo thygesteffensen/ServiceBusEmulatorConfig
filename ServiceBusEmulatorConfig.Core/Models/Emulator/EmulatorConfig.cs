@@ -1,201 +1,67 @@
-using System.Text.Json.Serialization;
-
 namespace ServiceBusEmulatorConfig.Core.Models.Emulator;
 
-public record EmulatorConfig
-{
-    [JsonPropertyName("UserConfig")]
-    public UserConfig UserConfig { get; set; }
-}
+public record EmulatorConfig(UserConfig UserConfig);
 
-public record UserConfig
-{
-    [JsonPropertyName("Namespaces")]
-    public List<Namespace> Namespaces { get; set; }
+public record UserConfig(List<Namespace> Namespaces, Logging Logging);
 
-    [JsonPropertyName("Logging")]
-    public Logging Logging { get; set; }
-}
+public record Logging(string Type);
 
-public record Logging
-{
-    [JsonPropertyName("Type")]
-    public string Type { get; set; } = "File";
-}
+public record Namespace(string Name, List<Queue> Queues, List<Topic> Topics);
 
-public record Namespace
-{
-    [JsonPropertyName("Name")]
-    public string Name { get; set; }
+public record Queue(string Name, QueueProperties Properties);
 
-    [JsonPropertyName("Queues")]
-    public List<Queue> Queues { get; set; } = new List<Queue>();
+public record QueueProperties(
+    bool DeadLetteringOnMessageExpiration,
+    string DefaultMessageTimeToLive,
+    string DuplicateDetectionHistoryTimeWindow,
+    string ForwardDeadLetteredMessagesTo,
+    string ForwardTo,
+    string LockDuration,
+    int MaxDeliveryCount,
+    bool RequiresDuplicateDetection,
+    bool RequiresSession
+);
 
-    [JsonPropertyName("Topics")]
-    public List<Topic> Topics { get; set; } = new List<Topic>();
-}
+public record Topic(string Name, TopicProperties Properties, List<Subscription> Subscriptions);
 
-public record Queue
-{
-    [JsonPropertyName("Name")]
-    public string Name { get; set; }
+public record TopicProperties(
+    bool RequiresDuplicateDetection,
+    string DeadLetteringOnMessageExpiration = "PT5M",
+    string DefaultMessageTimeToLive = "PT5M",
+    string DuplicateDetectionHistoryTimeWindow = "PT5M"
+);
 
-    [JsonPropertyName("Properties")]
-    public QueueProperties Properties { get; set; }
-}
+public record Subscription(string Name, SubscriptionProperties Properties, List<Rule> Rules);
 
-public record QueueProperties
-{
-    [JsonPropertyName("DeadLetteringOnMessageExpiration")]
-    public bool DeadLetteringOnMessageExpiration { get; set; }
+public record SubscriptionProperties(
+    bool DeadLetteringOnMessageExpiration,
+    string LockDuration,
+    int MaxDeliveryCount,
+    string ForwardDeadLetteredMessagesTo,
+    string ForwardTo,
+    bool RequiresSession,
+    string DefaultMessageTimeToLive = "PT5M"
+);
 
-    [JsonPropertyName("DefaultMessageTimeToLive")]
-    public string DefaultMessageTimeToLive { get; set; }
+public record Rule(string Name, RuleProperties Properties);
 
-    [JsonPropertyName("DuplicateDetectionHistoryTimeWindow")]
-    public string DuplicateDetectionHistoryTimeWindow { get; set; }
+public record RuleProperties(
+    string FilterType,
+    SqlFilter SqlFilter,
+    SqlAction Action,
+    CorrelationFilter? CorrelationFilter = null
+);
 
-    [JsonPropertyName("ForwardDeadLetteredMessagesTo")]
-    public string ForwardDeadLetteredMessagesTo { get; set; }
+public record SqlFilter(string SqlExpression);
 
-    [JsonPropertyName("ForwardTo")]
-    public string ForwardTo { get; set; }
+public record SqlAction(string SqlExpression);
 
-    [JsonPropertyName("LockDuration")]
-    public string LockDuration { get; set; }
-
-    [JsonPropertyName("MaxDeliveryCount")]
-    public int MaxDeliveryCount { get; set; }
-
-    [JsonPropertyName("RequiresDuplicateDetection")]
-    public bool RequiresDuplicateDetection { get; set; }
-
-    [JsonPropertyName("RequiresSession")]
-    public bool RequiresSession { get; set; }
-}
-
-public record Topic
-{
-    [JsonPropertyName("Name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("Properties")]
-    public TopicProperties Properties { get; set; }
-
-    [JsonPropertyName("Subscriptions")]
-    public List<Subscription> Subscriptions { get; set; } = new List<Subscription>();
-}
-
-public record TopicProperties
-{
-    [JsonPropertyName("DefaultMessageTimeToLive")]
-    public string DefaultMessageTimeToLive { get; set; }
-
-    [JsonPropertyName("DuplicateDetectionHistoryTimeWindow")]
-    public string DuplicateDetectionHistoryTimeWindow { get; set; }
-
-    [JsonPropertyName("RequiresDuplicateDetection")]
-    public bool RequiresDuplicateDetection { get; set; }
-}
-
-public record Subscription
-{
-    [JsonPropertyName("Name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("Properties")]
-    public SubscriptionProperties Properties { get; set; }
-
-    [JsonPropertyName("Rules")]
-    public List<Rule> Rules { get; set; } = new List<Rule>();
-}
-
-public record SubscriptionProperties
-{
-    [JsonPropertyName("DeadLetteringOnMessageExpiration")]
-    public bool DeadLetteringOnMessageExpiration { get; set; }
-
-    [JsonPropertyName("DefaultMessageTimeToLive")]
-    public string DefaultMessageTimeToLive { get; set; }
-
-    [JsonPropertyName("LockDuration")]
-    public string LockDuration { get; set; }
-
-    [JsonPropertyName("MaxDeliveryCount")]
-    public int MaxDeliveryCount { get; set; }
-
-    [JsonPropertyName("ForwardDeadLetteredMessagesTo")]
-    public string ForwardDeadLetteredMessagesTo { get; set; }
-
-    [JsonPropertyName("ForwardTo")]
-    public string ForwardTo { get; set; }
-
-    [JsonPropertyName("RequiresSession")]
-    public bool RequiresSession { get; set; }
-}
-
-public record Rule
-{
-    [JsonPropertyName("Name")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("Properties")]
-    public RuleProperties Properties { get; set; }
-}
-
-public record RuleProperties
-{
-    [JsonPropertyName("FilterType")]
-    public string FilterType { get; set; }
-
-    [JsonPropertyName("SqlFilter")]
-    public SqlFilter SqlFilter { get; set; }
-
-    [JsonPropertyName("CorrelationFilter")]
-    public CorrelationFilter CorrelationFilter { get; set; }
-
-    [JsonPropertyName("Action")]
-    public SqlAction Action { get; set; }
-}
-
-public record SqlFilter
-{
-    [JsonPropertyName("SqlExpression")]
-    public string SqlExpression { get; set; }
-}
-
-public record SqlAction
-{
-    [JsonPropertyName("SqlExpression")]
-    public string SqlExpression { get; set; }
-}
-
-public record CorrelationFilter
-{
-    [JsonPropertyName("ContentType")]
-    public string ContentType { get; set; }
-
-    [JsonPropertyName("CorrelationId")]
-    public string CorrelationId { get; set; }
-
-    [JsonPropertyName("Label")]
-    public string Label { get; set; }
-
-    [JsonPropertyName("MessageId")]
-    public string MessageId { get; set; }
-
-    [JsonPropertyName("Properties")]
-    public Dictionary<string, string> Properties { get; set; }
-
-    [JsonPropertyName("ReplyTo")]
-    public string ReplyTo { get; set; }
-
-    [JsonPropertyName("ReplyToSessionId")]
-    public string ReplyToSessionId { get; set; }
-
-    [JsonPropertyName("SessionId")]
-    public string SessionId { get; set; }
-
-    [JsonPropertyName("To")]
-    public string To { get; set; }
-}
+public record CorrelationFilter(
+    string ContentType,
+    string Label,
+    string MessageId,
+    string ReplyTo,
+    string ReplyToSessionId,
+    string SessionId,
+    string To
+);
