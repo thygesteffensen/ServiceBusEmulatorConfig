@@ -15,6 +15,20 @@ public partial class Topics(IApplicationState applicationState)
     private Identifier? _selectedNodeId;
     private Topic? _selectedTopic;
     private Subscription? _selectedSubscription;
+    private string _searchString = "";
+    
+    private bool FilterTopic(Topic topic)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+            
+        // Check if topic name matches
+        if (topic.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+            
+        // Check if any subscription name matches
+        return topic.Subscriptions.Any(sub => sub.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
 
     private void OnSelectedValueChanged(Identifier identifier)
     {
