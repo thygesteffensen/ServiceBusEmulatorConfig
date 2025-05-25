@@ -68,7 +68,7 @@
     private bool _exporting = false;
     private string _exportedConfig = "";
 
-    private async Task ExportConfigAsync()
+    private Task ExportConfigAsync()
     {
         try
         {
@@ -88,6 +88,8 @@
         {
             _exporting = false;
         }
+
+        return Task.CompletedTask;
     }
 
     private async Task CopyToClipboard()
